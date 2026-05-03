@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>APEX — Elite Calisthenics Engine</title>
+<meta name="description" content="The world's most complete calisthenics skill progression system. 60+ skills. AI-powered. Science-backed."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#000005;--s1:#04040f;--s2:#080814;--s3:#0c0c1a;
+  --bd:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.1);--b3:rgba(255,255,255,0.18);
+  --tx:#e8e8f0;--mu:#6b6b8a;--mu2:#3a3a55;
+  --w:#fff;
+  --c:#00d4ff;--cd:rgba(0,212,255,0.08);--cg:rgba(0,212,255,0.3);
+  --p:#9d4edd;--pd:rgba(157,78,221,0.08);--pg:rgba(157,78,221,0.3);
+  --g:#00ff87;--gd:rgba(0,255,135,0.07);--gg:rgba(0,255,135,0.3);
+  --go:#f4d03f;--god:rgba(244,208,63,0.08);--gog:rgba(244,208,63,0.4);
+  --r:#ff4060;--rd:rgba(255,64,96,0.08);
+  --fo:'Orbitron',sans-serif;--fb:'Inter',sans-serif;--fm:'JetBrains Mono',monospace;
+  --tr:all 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:14px;line-height:1.6;overflow-x:hidden;cursor:none}
+::-webkit-scrollbar{width:2px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.07)}
+#cur{position:fixed;width:6px;height:6px;background:var(--w);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(255,255,255,0.9),0 0 24px rgba(0,212,255,0.5)}
+#cur2{position:fixed;width:28px;height:28px;border:1px solid rgba(255,255,255,0.22);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width 0.18s,height 0.18s,border-color 0.18s}
+#spc{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bh{position:fixed;border-radius:50%;pointer-events:none;z-index:1}
+#bh1{width:600px;height:600px;top:-250px;left:-200px;background:radial-gradient(circle,rgba(0,0,0,1) 0%,rgba(0,212,255,0.05) 40%,transparent 70%);animation:bhs 45s linear infinite}
+#bh2{width:400px;height:400px;bottom:-120px;right:-120px;background:radial-gradient(circle,rgba(0,0,0,1) 0%,rgba(157,78,221,0.07) 40%,transparent 70%);animation:bhs 65s linear infinite reverse}
+#bh3{width:220px;height:220px;top:45%;left:60%;background:radial-gradient(circle,rgba(0,0,0,1) 0%,rgba(244,208,63,0.04) 40%,transparent 70%);animation:bhs 28s linear infinite}
+@keyframes bhs{to{transform:rotate(360deg)}}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 44px;display:flex;align-items:center;justify-content:space-between;transition:var(--tr)}
+nav.solid{background:rgba(0,0,5,0.96);border-bottom:1px solid var(--bd);backdrop-filter:blur(24px);padding:12px 44px}
+.logo{font-family:var(--fo);font-size:19px;font-weight:900;letter-spacing:0.2em;color:var(--w);text-decoration:none;cursor:none;position:relative}
+.logo::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--c),var(--p));box-shadow:0 0 8px var(--c)}
+.logo-s{display:block;font-family:var(--fm);font-size:7px;letter-spacing:0.5em;color:var(--mu);margin-top:2px}
+.nc{display:flex;gap:26px}
+.nc a{font-size:10px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--mu);text-decoration:none;transition:color 0.2s;cursor:none}
+.nc a:hover{color:var(--w)}
+.nr{display:flex;align-items:center;gap:9px}
+#nbs,#nbx{font-family:var(--fm);font-size:10px;padding:4px 9px;border:1px solid;display:none;align-items:center;gap:5px;border-radius:2px}
+#nbs{border-color:rgba(244,208,63,0.3);color:var(--go);background:var(--god)}
+#nbx{border-color:rgba(0,212,255,0.25);color:var(--c);background:var(--cd)}
+.pg{display:none;position:relative;z-index:2}
+.pg.on{display:block}
+#pgl{display:none;min-height:100vh;align-items:center;justify-content:center;position:relative;z-index:2}
+#pgl.on{display:flex}
+#pgo{display:none;min-height:100vh;align-items:center;justify-content:center;padding:100px 20px;position:relative;z-index:2}
+#pgo.on{display:flex}
+#pgd{display:none;z-index:2;position:relative}
+#pgd.on{display:grid;grid-template-columns:248px 1fr;min-height:100vh;padding-top:58px}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:11px 26px;font-family:var(--fb);font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;border:none;cursor:none;transition:var(--tr);position:relative;overflow:hidden;border-radius:2px}
+.btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background 0.2s}
+.btn:hover::before{background:rgba(255,255,255,0.05)}
+.bw{background:var(--w);color:#000}.bw:hover{box-shadow:0 0 40px rgba(255,255,255,0.28),0 0 80px rgba(0,212,255,0.12);transform:translateY(-1px)}
+.bo{background:transparent;color:var(--w);border:1px solid rgba(255,255,255,0.18)}.bo:hover{border-color:rgba(255,255,255,0.45)}
+.bc{background:var(--c);color:#000}.bc:hover{box-shadow:0 0 28px var(--cg)}
+.bg2{background:linear-gradient(135deg,var(--go),#e67e22);color:#000}.bg2:hover{box-shadow:0 0 32px var(--gog);transform:translateY(-1px)}
+.bgh{background:rgba(255,255,255,0.04);color:var(--w);border:1px solid var(--bd)}.bgh:hover{background:rgba(255,255,255,0.08)}
+.bsm{padding:7px 16px;font-size:10px}
+.blg{padding:15px 38px;font-size:13px}
+.bfl{width:100%;justify-content:center}
+.glass{background:rgba(255,255,255,0.02);border:1px solid var(--bd);backdrop-filter:blur(20px)}
+.tag{font-family:var(--fm);font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--mu)}
+.gln{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
+/* LOGIN */
+.lbox{max-width:430px;width:100%;padding:48px;background:rgba(4,4,15,0.92);border:1px solid var(--b2);border-radius:4px;backdrop-filter:blur(40px);position:relative}
+.lbox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--p),var(--c),var(--g))}
+.lh{font-family:var(--fo);font-size:24px;font-weight:900;letter-spacing:0.05em;margin-bottom:6px}
+.ls{font-size:12px;color:var(--mu);margin-bottom:28px;line-height:1.6}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);color:var(--w);font-size:12px;font-weight:600;cursor:none;transition:var(--tr);border-radius:2px;font-family:var(--fb);margin-bottom:10px}
+.gbtn:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.28)}
+.gic{width:18px;height:18px;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z' fill='%234285F4'/%3E%3Cpath d='M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z' fill='%2334A853'/%3E%3Cpath d='M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z' fill='%23FBBC05'/%3E%3Cpath d='M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z' fill='%23EA4335'/%3E%3C/svg%3E") center/contain no-repeat;flex-shrink:0}
+.dvd{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--mu2);font-size:10px;font-family:var(--fm)}
+.dvd::before,.dvd::after{content:'';flex:1;height:1px;background:var(--bd)}
+.fin{width:100%;padding:11px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--bd);color:var(--w);font-family:var(--fb);font-size:13px;transition:border 0.2s;border-radius:2px;margin-bottom:9px}
+.fin:focus{outline:none;border-color:rgba(0,212,255,0.4);box-shadow:0 0 0 3px rgba(0,212,255,0.05)}
+.fin::placeholder{color:var(--mu2)}
+.disc{padding:13px;background:rgba(255,64,96,0.04);border:1px solid rgba(255,64,96,0.14);border-radius:2px;margin-top:14px}
+.disc p{font-size:9px;color:rgba(255,100,120,0.75);line-height:1.8;font-family:var(--fm)}
+/* ONBOARDING */
+.obox{max-width:540px;width:100%;padding:44px;background:rgba(4,4,15,0.95);border:1px solid var(--b2);border-radius:4px;backdrop-filter:blur(40px);position:relative}
+.obox::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--c),var(--p))}
+.opg{display:flex;gap:5px;margin-bottom:32px}
+.opd{height:2px;flex:1;background:var(--bd);transition:background 0.35s,box-shadow 0.35s;border-radius:1px}
+.opd.on{background:var(--c);box-shadow:0 0 8px var(--c)}
+.ost{display:none}.ost.on{display:block}
+.oh{font-family:var(--fo);font-size:24px;font-weight:800;letter-spacing:0.04em;margin-bottom:6px}
+.os{font-size:12px;color:var(--mu);margin-bottom:28px;line-height:1.6}
+.og{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.oo{padding:14px;border:1px solid var(--bd);background:rgba(255,255,255,0.02);cursor:none;transition:var(--tr);text-align:left;border-radius:2px;font-family:var(--fb);position:relative}
+.oo:hover{border-color:var(--b2);background:rgba(255,255,255,0.04)}
+.oo.on{border-color:var(--c);background:rgba(0,212,255,0.05);box-shadow:0 0 18px rgba(0,212,255,0.07)}
+.oo.on::after{content:'✓';position:absolute;top:7px;right:9px;font-size:10px;color:var(--c)}
+.oi{font-size:18px;margin-bottom:6px;display:block}
+.on2{font-size:13px;font-weight:600;color:var(--w);margin-bottom:2px}
+.od{font-size:10px;color:var(--mu);font-family:var(--fm)}
+.flb{display:block;font-family:var(--fm);font-size:9px;letter-spacing:0.3em;color:var(--mu);margin-bottom:7px}
+.fsl{width:100%;padding:10px 13px;background:rgba(255,255,255,0.03);border:1px solid var(--bd);color:var(--w);font-family:var(--fb);font-size:13px;appearance:none;border-radius:2px;cursor:none}
+.fsl:focus{outline:none;border-color:rgba(0,212,255,0.3)}
+.fsl option{background:#060614}
+/* DASHBOARD */
+.sb{background:rgba(4,4,15,0.97);border-right:1px solid var(--bd);padding:16px 13px;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;display:flex;flex-direction:column;gap:3px;backdrop-filter:blur(20px)}
+.sb::-webkit-scrollbar{width:1px}
+.su{display:flex;align-items:center;gap:9px;padding:11px;border:1px solid var(--bd);border-radius:4px;margin-bottom:10px}
+.sav{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--p));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.sun{font-size:12px;font-weight:600;margin-bottom:1px}
+.slv{font-family:var(--fm);font-size:8px;color:var(--c);letter-spacing:0.2em}
+.sxp{padding:11px;background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.1);border-radius:4px;margin-bottom:5px}
+.sxr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.sxv{font-family:var(--fo);font-size:17px;color:var(--c);font-weight:700}
+.sxl{font-family:var(--fm);font-size:8px;color:var(--mu);letter-spacing:0.2em}
+.sbar{height:2px;background:rgba(0,212,255,0.07);border-radius:1px;overflow:hidden}
+.sbf{height:100%;background:linear-gradient(90deg,var(--c),var(--p));border-radius:1px;transition:width 1s ease;box-shadow:0 0 7px var(--c)}
+.sbl{font-family:var(--fm);font-size:8px;letter-spacing:0.4em;color:var(--mu2);padding:9px 8px 3px;text-transform:uppercase}
+.si{display:flex;align-items:center;gap:8px;padding:8px 9px;cursor:none;transition:var(--tr);color:var(--mu);font-size:12px;font-weight:500;border:1px solid transparent;border-radius:3px;margin-bottom:1px}
+.si:hover{background:rgba(255,255,255,0.04);color:var(--tx)}
+.si.on{background:rgba(0,212,255,0.05);color:var(--w);border-color:rgba(0,212,255,0.14)}
+.sic{width:15px;text-align:center;font-size:13px;flex-shrink:0}
+.schar{display:flex;flex-direction:column;align-items:center;padding:14px 8px;border:1px solid var(--bd);border-radius:4px;margin-top:auto}
+.mp{padding:24px 32px;overflow-y:auto;min-height:calc(100vh - 58px)}
+.mp::-webkit-scrollbar{width:2px}
+.pnl{display:none}.pnl.on{display:block}
+.ph{margin-bottom:24px}
+.pht{font-family:var(--fm);font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--mu);margin-bottom:8px}
+.ptt{font-family:var(--fo);font-size:26px;font-weight:900;letter-spacing:0.05em;line-height:1}
+/* HOME */
+.hsg{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:18px}
+.hsc{padding:17px;border:1px solid var(--bd);border-radius:3px;background:var(--s1)}
+.hsv{font-family:var(--fo);font-size:30px;font-weight:800;letter-spacing:-0.02em;line-height:1}
+.hsl{font-family:var(--fm);font-size:8px;letter-spacing:0.25em;color:var(--mu);margin-top:4px}
+.hsc.sc .hsv{color:var(--go);text-shadow:0 0 18px var(--gog)}
+.hsc.sx .hsv{color:var(--c);text-shadow:0 0 18px var(--cg)}
+.hsc.sp .hsv{color:var(--g);text-shadow:0 0 14px var(--gg)}
+.hsc.sw .hsv{color:var(--p);text-shadow:0 0 14px var(--pg)}
+.tc{padding:20px;border:1px solid var(--bd);background:var(--s1);border-radius:4px;margin-bottom:12px}
+.tch{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.tct{font-size:17px;font-weight:700;letter-spacing:-0.01em}
+.exl{display:flex;flex-direction:column;gap:5px}
+.exr{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--bd);border-radius:3px;cursor:none;transition:var(--tr)}
+.exr:hover{border-color:var(--b2);background:rgba(255,255,255,0.02)}
+.exr.dn{border-color:rgba(0,255,135,0.18);background:rgba(0,255,135,0.02)}
+.exn{font-weight:600;font-size:12px}
+.exi{font-family:var(--fm);font-size:9px;color:var(--mu);margin-top:1px}
+.exs{font-family:var(--fm);font-size:10px;color:var(--c);text-align:right;min-width:70px}
+.exbg{font-family:var(--fm);font-size:8px;padding:1px 6px;border-radius:2px}
+.exbg.pl{color:var(--c);border:1px solid rgba(0,212,255,0.2);background:var(--cd)}
+.exbg.ps{color:var(--p);border:1px solid rgba(157,78,221,0.2);background:var(--pd)}
+.exbg.co{color:var(--g);border:1px solid rgba(0,255,135,0.2);background:var(--gd)}
+.exbg.mb{color:var(--go);border:1px solid rgba(244,208,63,0.2);background:var(--god)}
+.exck{width:19px;height:19px;border:1px solid var(--b2);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;transition:var(--tr);flex-shrink:0}
+.exr.dn .exck{background:var(--g);border-color:var(--g);box-shadow:0 0 9px var(--gg)}
+.rday{padding:24px;text-align:center;color:var(--mu);font-size:12px;border:1px solid var(--bd);border-radius:3px}
+/* SKILL TREE */
+.skt{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:20px}
+.skb{padding:6px 14px;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:none;transition:var(--tr);border-radius:2px;font-family:var(--fb)}
+.skb:hover{border-color:var(--b2);color:var(--tx)}
+.skb.on{border-color:var(--c);color:var(--c);background:var(--cd)}
+/* CATEGORY HEADERS */
+.cat-h{font-family:var(--fo);font-size:13px;font-weight:700;letter-spacing:0.1em;padding:10px 0 6px;border-bottom:1px solid var(--bd);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.trlv{margin-bottom:32px}
+.tll{font-family:var(--fm);font-size:8px;letter-spacing:0.4em;color:var(--mu2);margin-bottom:10px;text-transform:uppercase}
+.tnds{display:flex;gap:8px;flex-wrap:wrap}
+.tnd{padding:14px 16px;border:1px solid var(--bd);background:var(--s1);cursor:none;transition:var(--tr);min-width:170px;border-radius:3px;position:relative}
+.tnd:hover:not(.lk){border-color:var(--b2);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.5)}
+.tnd.lk{opacity:0.28;cursor:not-allowed}
+.tnd.dn{border-color:rgba(0,255,135,0.28);background:rgba(0,255,135,0.03)}
+.tnd.ac{border-color:rgba(0,212,255,0.38);background:rgba(0,212,255,0.04);box-shadow:0 0 18px rgba(0,212,255,0.07)}
+.tns{font-family:var(--fm);font-size:7px;letter-spacing:0.3em;margin-bottom:6px}
+.dn .tns{color:var(--g)}.ac .tns{color:var(--c)}.lk .tns{color:var(--mu2)}
+.tnn{font-weight:700;font-size:12px;margin-bottom:3px;letter-spacing:-0.01em}
+.tnset{font-family:var(--fm);font-size:9px;color:var(--mu)}
+.tnw{font-size:9px;color:var(--mu);margin-top:5px;line-height:1.6}
+.tnb{height:1px;background:rgba(255,255,255,0.05);margin-top:10px;overflow:hidden}
+.tnf{height:100%;transition:width 1s ease}
+.dn .tnf{background:var(--g)}.ac .tnf{background:var(--c)}
+.tcon{width:1px;height:24px;background:linear-gradient(180deg,rgba(0,212,255,0.18),transparent);margin-left:36px}
+/* PLAN */
+.wkg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:20px}
+.wkd{padding:9px 5px;border:1px solid var(--bd);border-radius:3px;text-align:center;background:var(--s1)}
+.wkd.tw{border-color:rgba(0,212,255,0.28);background:rgba(0,212,255,0.04)}
+.wkd.rs{opacity:0.35}
+.wdn{font-family:var(--fm);font-size:8px;letter-spacing:0.2em;color:var(--mu);margin-bottom:3px}
+.wdf{font-size:10px;font-weight:700;letter-spacing:0.04em}
+.ptbl{width:100%;border-collapse:collapse}
+.ptbl th{text-align:left;font-family:var(--fm);font-size:8px;letter-spacing:0.3em;color:var(--mu2);padding:7px 11px;border-bottom:1px solid var(--bd)}
+.ptbl td{padding:10px 11px;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.02)}
+.ptbl tr:hover td{background:rgba(255,255,255,0.015)}
+.pno{padding:16px;border:1px solid rgba(244,208,63,0.11);background:rgba(244,208,63,0.02);border-radius:3px;margin-top:14px;font-size:11px;color:var(--mu);line-height:1.8}
+/* PROGRESS */
+.prr{position:relative;display:inline-flex}
+.prr svg{transform:rotate(-90deg)}
+.prl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.prn{font-family:var(--fo);font-size:24px;font-weight:900;color:var(--c)}
+.prs{font-family:var(--fm);font-size:7px;letter-spacing:0.25em;color:var(--mu)}
+.prgd{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;margin-top:20px}
+.prc{padding:15px;border:1px solid var(--bd);background:var(--s1);border-radius:3px}
+.pcn{font-size:13px;font-weight:700;margin-bottom:2px}
+.pcl{font-family:var(--fm);font-size:8px;color:var(--mu);margin-bottom:10px;letter-spacing:0.18em}
+.pb{height:2px;background:rgba(255,255,255,0.05);border-radius:1px;overflow:hidden}
+.pbf{height:100%;border-radius:1px;transition:width 1.5s ease}
+.ppt{font-family:var(--fm);font-size:9px;color:var(--mu);margin-top:4px}
+.trc{padding:22px;border:1px solid rgba(244,208,63,0.14);background:rgba(244,208,63,0.02);border-radius:3px;margin-top:14px}
+.trt{font-family:var(--fo);font-size:15px;color:var(--go);margin-bottom:7px;font-weight:700}
+.trb{font-size:12px;color:var(--mu);line-height:1.9}
+.trb strong{color:var(--tx)}
+/* STREAK */
+.sth{display:flex;align-items:center;gap:22px;padding:22px;border:1px solid rgba(244,208,63,0.14);background:rgba(244,208,63,0.02);border-radius:4px;margin-bottom:14px}
+.stf{font-size:58px;animation:ff 0.4s ease-in-out infinite alternate}
+@keyframes ff{from{transform:rotate(-3deg)scale(1)}to{transform:rotate(3deg)scale(1.06)}}
+.stnum{font-family:var(--fo);font-size:72px;font-weight:900;color:var(--go);text-shadow:0 0 36px var(--gog);line-height:1;letter-spacing:-0.04em}
+.stlb{font-family:var(--fm);font-size:8px;letter-spacing:0.3em;color:var(--mu)}
+.stmg{font-size:14px;font-weight:600;margin-top:4px}
+.stcl{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.scd{height:30px;border:1px solid var(--bd);border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:8px;color:var(--mu)}
+.scd.dd{background:rgba(244,208,63,0.09);border-color:rgba(244,208,63,0.28);color:var(--go)}
+.scd.td{border-color:rgba(255,255,255,0.28);color:var(--w);box-shadow:0 0 7px rgba(255,255,255,0.1)}
+/* BADGES */
+.lvc{padding:20px;border:1px solid var(--bd);border-radius:3px;margin-bottom:18px}
+.lvn{font-family:var(--fo);font-size:24px;font-weight:900;letter-spacing:0.07em;margin-bottom:3px}
+.lvb{height:2px;background:rgba(255,255,255,0.05);border-radius:1px;margin-top:12px;overflow:hidden}
+.lvf{height:100%;background:linear-gradient(90deg,var(--c),var(--p));box-shadow:0 0 9px var(--c);transition:width 1.5s ease;border-radius:1px}
+.bgg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
+.bgc{padding:16px;border:1px solid var(--bd);text-align:center;border-radius:3px;transition:var(--tr);background:var(--s1)}
+.bgc:hover{border-color:var(--b2);transform:translateY(-2px)}
+.bgc.lk{opacity:0.22}
+.bgi{font-size:30px;margin-bottom:7px}
+.bgnm{font-size:11px;font-weight:600;margin-bottom:2px}
+.bgd{font-size:9px;color:var(--mu);font-family:var(--fm)}
+/* TIPS */
+.tpg{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tpc{padding:16px;border:1px solid var(--bd);border-radius:3px;background:var(--s1)}
+.tpt{font-family:var(--fm);font-size:8px;letter-spacing:0.3em;margin-bottom:7px}
+.ttm{color:#ff6b6b}.ttf{color:var(--g)}.ttp{color:var(--c)}
+.tph{font-size:12px;font-weight:600;margin-bottom:5px}
+.tpb{font-size:11px;color:var(--mu);line-height:1.75}
+/* VIDEOS */
+.vdg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:9px}
+.vdc{border-radius:3px;overflow:hidden;border:1px solid var(--bd);background:var(--s1);cursor:none}
+.vdp{height:140px;display:flex;align-items:center;justify-content:center;position:relative;background:var(--s2);overflow:hidden}
+.vdgl{font-size:48px;opacity:0.1}
+.vdov{position:absolute;inset:0;backdrop-filter:blur(5px);background:rgba(0,0,5,0.62);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}
+.vdi{padding:12px}
+.vdn{font-weight:600;font-size:12px;margin-bottom:2px}
+.vdt{font-family:var(--fm);font-size:8px;color:var(--mu);letter-spacing:0.15em}
+/* AI CHAT */
+.aiw{display:flex;flex-direction:column;height:calc(100vh - 210px);max-height:560px}
+.aim{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px;border:1px solid var(--bd);background:rgba(4,4,15,0.6);border-radius:3px;margin-bottom:9px;backdrop-filter:blur(10px)}
+.aim::-webkit-scrollbar{width:1px}
+.amsg{padding:10px 13px;font-size:12px;line-height:1.75;border-radius:3px;max-width:86%}
+.amsg.u{align-self:flex-end;background:rgba(255,255,255,0.05);border:1px solid var(--b2)}
+.amsg.b{align-self:flex-start;background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.14)}
+.amsg.b strong{color:var(--c)}.amsg.b em{color:var(--g);font-style:normal}
+.air{display:flex;gap:7px}
+.ain{flex:1;padding:10px 13px;background:rgba(255,255,255,0.03);border:1px solid var(--bd);color:var(--w);font-family:var(--fb);font-size:12px;border-radius:2px}
+.ain:focus{outline:none;border-color:rgba(0,212,255,0.3);box-shadow:0 0 0 3px rgba(0,212,255,0.04)}
+.ain::placeholder{color:var(--mu2)}
+.ath::after{content:'...';animation:dts 1s infinite}
+@keyframes dts{0%{content:'.'}33%{content:'..'}66%{content:'...'}100%{content:'.'}}
+.aisg{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
+.aisp{padding:4px 10px;border:1px solid var(--bd);background:transparent;color:var(--mu);font-size:9px;font-family:var(--fb);cursor:none;border-radius:2px;transition:var(--tr)}
+.aisp:hover{border-color:var(--b2);color:var(--tx)}
+.aki{padding:9px;border:1px solid rgba(244,208,63,0.16);background:rgba(244,208,63,0.03);border-radius:3px;margin-bottom:9px}
+.aki input{width:100%;background:transparent;border:none;color:var(--w);font-family:var(--fm);font-size:10px;outline:none}
+.aki input::placeholder{color:var(--mu2)}
+/* PAYMENT MODAL */
+.pmo{position:fixed;inset:0;background:rgba(0,0,5,0.96);z-index:10000;display:flex;align-items:center;justify-content:center;padding:32px;backdrop-filter:blur(22px)}
+.pmo.h{display:none}
+.pmb{max-width:470px;width:100%;background:rgba(4,4,15,0.99);border:1px solid var(--b2);padding:38px;border-radius:4px;position:relative;max-height:92vh;overflow-y:auto;animation:pin 0.28s ease}
+@keyframes pin{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+.pmb::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--go),#e67e22)}
+.pmc{position:absolute;top:13px;right:16px;background:none;border:none;color:var(--mu);font-size:17px;cursor:none;transition:color 0.2s}
+.pmc:hover{color:var(--w)}
+.pmh{font-family:var(--fo);font-size:22px;font-weight:900;letter-spacing:0.04em;margin-bottom:5px}
+.pmf{display:flex;flex-direction:column;gap:6px;margin:14px 0}
+.pmfi{display:flex;align-items:center;gap:7px;font-size:12px}
+.pmfi::before{content:'✦';color:var(--go);font-size:8px;flex-shrink:0}
+.plt{display:flex;gap:5px;margin-bottom:14px}
+.plo{flex:1;padding:9px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:none;font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;text-align:center;transition:var(--tr);font-family:var(--fb);border-radius:2px}
+.plo.on{border-color:var(--go);color:var(--go);background:var(--god)}
+.pam{font-family:var(--fo);font-size:42px;font-weight:900;letter-spacing:-0.03em;color:var(--go)}
+.ppr{font-family:var(--fm);font-size:9px;color:var(--mu);margin-bottom:14px;letter-spacing:0.2em}
+.pms{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.pmm{padding:6px 11px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:none;font-size:9px;font-family:var(--fm);transition:var(--tr);border-radius:2px}
+.pmm.on{border-color:var(--w);color:var(--w)}
+.psec{font-size:9px;color:var(--mu2);font-family:var(--fm);letter-spacing:0.1em;margin-top:9px;text-align:center}
+#tbox{position:fixed;bottom:24px;right:24px;z-index:20000;display:flex;flex-direction:column;gap:5px}
+.tst{padding:10px 14px;font-size:11px;font-weight:500;animation:tin 0.28s ease;display:flex;align-items:center;gap:7px;max-width:270px;border:1px solid;backdrop-filter:blur(20px);background:rgba(4,4,15,0.97);border-radius:3px}
+.tst.s{border-color:rgba(0,255,135,0.28);color:var(--g)}
+.tst.i{border-color:rgba(0,212,255,0.28);color:var(--c)}
+.tst.w{border-color:rgba(244,208,63,0.28);color:var(--go)}
+.tst.e{border-color:rgba(255,64,96,0.28);color:var(--r)}
+@keyframes tin{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+.mnav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(4,4,15,0.98);border-top:1px solid var(--bd);padding:7px 12px;z-index:999;gap:0;backdrop-filter:blur(20px)}
+.mb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px;cursor:none;color:var(--mu);font-size:8px;letter-spacing:0.08em;font-family:var(--fm);background:none;border:none;transition:color 0.2s}
+.mb.on{color:var(--c)}.mbi{font-size:14px}
+@keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes mglo{0%,100%{filter:drop-shadow(0 0 18px rgba(244,208,63,0.7))}50%{filter:drop-shadow(0 0 46px rgba(244,208,63,1))}}
+@keyframes blk{0%,100%{opacity:1}50%{opacity:0.3}}
+.fla{animation:fl 4s ease-in-out infinite}
+/* FREE TIER badge */
+.free-badge{font-family:var(--fm);font-size:7px;letter-spacing:0.25em;padding:2px 6px;background:var(--gd);border:1px solid rgba(0,255,135,0.2);color:var(--g);border-radius:2px;vertical-align:middle;margin-left:5px}
+@media(max-width:1024px){
+  #pgd.on{grid-template-columns:1fr}.sb{display:none}.mnav{display:flex}#pgd.on{padding-bottom:62px}
+  .hsg{grid-template-columns:1fr 1fr}.tpg{grid-template-columns:1fr}.wkg{grid-template-columns:repeat(4,1fr)}
+  nav{padding:12px 20px}.nc{display:none}
+}
+@media(max-width:600px){.hsg{grid-template-columns:1fr}.og{grid-template-columns:1fr}.mp{padding:14px}.prgd{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur2"></div>
+<canvas id="spc"></canvas>
+<div class="bh" id="bh1"></div><div class="bh" id="bh2"></div><div class="bh" id="bh3"></div>
+<div id="tbox"></div>
+
+<!-- PAYMENT MODAL -->
+<div class="pmo h" id="pmo">
+  <div class="pmb">
+    <button class="pmc" onclick="closeModal()">✕</button>
+    <div style="font-size:34px;margin-bottom:11px">⚡</div>
+    <div class="pmh">APEX PREMIUM</div>
+    <div style="font-size:11px;color:var(--mu);margin-bottom:4px">Unlock your complete elite journey</div>
+    <div class="pmf">
+      <div class="pmfi">All 60+ skill progressions unlocked</div>
+      <div class="pmfi">Live Claude AI coaching (unlimited)</div>
+      <div class="pmfi">HD video demonstrations for every skill</div>
+      <div class="pmfi">Multi-skill combined weekly splits</div>
+      <div class="pmfi">Advanced body & relative strength analytics</div>
+      <div class="pmfi">Skill-specific nutrition protocols</div>
+      <div class="pmfi">Priority support & updates</div>
+    </div>
+    <div class="plt">
+      <div class="plo on" id="pmo-m" onclick="setPlan('m')">Monthly</div>
+      <div class="plo" id="pmo-y" onclick="setPlan('y')">Yearly <span style="color:var(--g);font-size:8px">−40%</span></div>
+    </div>
+    <div class="pam" id="pamount">₹99</div>
+    <div class="ppr" id="pperiod">PER MONTH · CANCEL ANYTIME</div>
+    <div style="font-family:var(--fm);font-size:7px;letter-spacing:0.4em;color:var(--mu2);margin-bottom:7px">PAYMENT METHOD</div>
+    <div class="pms">
+      <div class="pmm on" onclick="selpm(this)">PhonePe / UPI</div>
+      <div class="pmm" onclick="selpm(this)">Credit Card</div>
+      <div class="pmm" onclick="selpm(this)">Net Banking</div>
+      <div class="pmm" onclick="selpm(this)">Debit Card</div>
+    </div>
+    <button class="btn bg2 bfl" onclick="doPayment()">Pay & Activate Premium →</button>
+    <div class="psec">🔒 Secured payment · Instant activation · No hidden charges</div>
+    <div style="margin-top:12px;padding:10px;border:1px solid var(--bd);border-radius:3px;font-size:9px;color:var(--mu2);font-family:var(--fm);text-align:center">Your payment is processed securely. Financial data is encrypted and never stored.</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="tnav">
+  <a class="logo clickable" href="#" onclick="showLand();return false">APEX<span class="logo-s">Elite Calisthenics Engine</span></a>
+  <div class="nc">
+    <a href="#" onclick="ss('sk-sec');return false">Skills</a>
+    <a href="#" onclick="ss('sci-sec');return false">Science</a>
+    <a href="#" onclick="ss('pr-sec');return false">Pricing</a>
+  </div>
+  <div class="nr">
+    <div id="nbs" style="display:none;align-items:center;gap:5px">🔥 <span id="ns">0</span></div>
+    <div id="nbx" style="display:none;align-items:center;gap:5px">⚡ <span id="nx">0</span></div>
+    <button class="btn bo bsm clickable" onclick="showPage('pgl')">Login</button>
+    <button class="btn bg2 bsm clickable" onclick="openModal()">Premium</button>
+  </div>
+</nav>
+
+<!-- ═══════════ LANDING ═══════════ -->
+<div class="pg on" id="pg-land">
+<section style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:110px 44px 70px;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.012) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 80%)"></div>
+  <div style="text-align:center;position:relative;z-index:3;max-width:960px;animation:fu 0.7s ease">
+    <div style="display:inline-flex;align-items:center;gap:8px;padding:4px 14px;border:1px solid rgba(0,212,255,0.18);background:rgba(0,212,255,0.04);border-radius:2px;margin-bottom:32px">
+      <span style="width:5px;height:5px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:blk 2s infinite"></span>
+      <span style="font-family:var(--fm);font-size:8px;letter-spacing:0.4em;color:var(--mu)">SKILL UNLOCK ENGINE — 60+ PROGRESSIONS — AI POWERED</span>
+    </div>
+    <h1 style="font-family:var(--fo);font-size:clamp(56px,10vw,118px);font-weight:900;line-height:0.88;letter-spacing:0.02em;margin-bottom:24px">
+      <span style="display:block;color:var(--w);text-shadow:0 0 60px rgba(255,255,255,0.28)">UNLOCK</span>
+      <span style="display:block;color:transparent;-webkit-text-stroke:1.5px rgba(0,212,255,0.45)">ELITE</span>
+      <span style="display:block;color:var(--w);text-shadow:0 0 60px rgba(255,255,255,0.28)">SKILLS</span>
+    </h1>
+    <p style="font-size:16px;color:var(--mu);max-width:460px;margin:0 auto 38px;line-height:1.75">From first pull-up to one-arm planche. 60+ skills. Real progressions. AI coaching. Science-backed plans.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn bw blg clickable" onclick="showPage('pgl')">Begin Training →</button>
+      <button class="btn bo blg clickable" onclick="ss('sk-sec')">Explore 60+ Skills</button>
+    </div>
+    <div style="display:flex;justify-content:center;gap:44px;margin-top:52px;flex-wrap:wrap">
+      <div style="text-align:center"><div style="font-family:var(--fo);font-size:38px;font-weight:900;color:var(--c)">60+</div><div style="font-family:var(--fm);font-size:8px;letter-spacing:0.3em;color:var(--mu);margin-top:3px">SKILLS</div></div>
+      <div style="width:1px;background:var(--bd)"></div>
+      <div style="text-align:center"><div style="font-family:var(--fo);font-size:38px;font-weight:900;color:var(--p)">AI</div><div style="font-family:var(--fm);font-size:8px;letter-spacing:0.3em;color:var(--mu);margin-top:3px">COACH</div></div>
+      <div style="width:1px;background:var(--bd)"></div>
+      <div style="text-align:center"><div style="font-family:var(--fo);font-size:38px;font-weight:900;color:var(--g)">∞</div><div style="font-family:var(--fm);font-size:8px;letter-spacing:0.3em;color:var(--mu);margin-top:3px">POTENTIAL</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS GRID -->
+<section id="sk-sec" style="padding:70px 44px;max-width:1400px;margin:0 auto">
+  <div style="margin-bottom:44px">
+    <div class="tag" style="margin-bottom:10px">// COMPLETE SKILL LIBRARY</div>
+    <h2 style="font-family:var(--fo);font-size:clamp(32px,5vw,54px);font-weight:900;letter-spacing:0.04em;line-height:0.95">60+ SKILLS.<br><span style="color:var(--mu2)">EVERY PATH MAPPED.</span></h2>
+  </div>
+  <div id="land-skills" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--bd)"></div>
+</section>
+
+<!-- SCIENCE -->
+<section id="sci-sec" style="padding:70px 44px;max-width:1280px;margin:0 auto">
+  <div class="tag" style="margin-bottom:10px">// THE SCIENCE</div>
+  <h2 style="font-family:var(--fo);font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:0.04em;margin-bottom:40px">BUILT ON<br><span style="color:var(--c)">REAL DATA</span></h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1px;background:var(--bd);margin-bottom:36px">
+    <div style="background:var(--s1);padding:24px"><div style="font-family:var(--fo);font-size:44px;font-weight:900;color:var(--c);margin-bottom:7px">87%</div><div style="font-size:12px;color:var(--mu);line-height:1.7">of beginners quit due to lack of structured progression. APEX solves this with a clear node-by-node path.</div></div>
+    <div style="background:var(--s1);padding:24px"><div style="font-family:var(--fo);font-size:44px;font-weight:900;color:var(--p);margin-bottom:7px">4×</div><div style="font-size:12px;color:var(--mu);line-height:1.7">faster skill acquisition with periodized training vs random workouts. (European Journal of Sport Science)</div></div>
+    <div style="background:var(--s1);padding:24px"><div style="font-family:var(--fo);font-size:44px;font-weight:900;color:var(--g);margin-bottom:7px">12wk</div><div style="font-size:12px;color:var(--mu);line-height:1.7">avg time to first muscle-up with our protocol vs 6–18 months with random internet advice.</div></div>
+    <div style="background:var(--s1);padding:24px"><div style="font-family:var(--fo);font-size:44px;font-weight:900;color:var(--go);margin-bottom:7px">3×</div><div style="font-size:12px;color:var(--mu);line-height:1.7">longer tendon adaptation vs muscle. This is why planche takes years — and why our protocol respects it.</div></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pr-sec" style="padding:70px 44px;max-width:860px;margin:0 auto;text-align:center">
+  <div class="tag" style="margin-bottom:10px">// PLANS</div>
+  <h2 style="font-family:var(--fo);font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:0.04em;margin-bottom:40px">START NOW.<br><span style="color:var(--mu2)">NO EXCUSES.</span></h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd)">
+    <div style="background:var(--s1);padding:36px;text-align:left">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:0.3em;padding:2px 9px;border:1px solid var(--bd);color:var(--mu);display:inline-block;margin-bottom:14px">FREE</div>
+      <div style="font-family:var(--fo);font-size:48px;font-weight:900;letter-spacing:-0.03em;margin-bottom:3px">₹0</div>
+      <div style="font-family:var(--fm);font-size:8px;color:var(--mu);letter-spacing:0.3em;margin-bottom:20px">FOREVER FREE</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--g)">✓</span>3 Beginner skills (full access)</li>
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--g)">✓</span>5 Intermediate skills (full access)</li>
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--g)">✓</span>2 Advanced skills (full access)</li>
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--g)">✓</span>AI Coach (5 messages/day)</li>
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--g)">✓</span>Streak & XP tracking</li>
+        <li style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:7px"><span style="color:var(--mu2)">✕</span>All 60+ skills</li>
+        <li style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:7px"><span style="color:var(--mu2)">✕</span>Unlimited AI coaching</li>
+        <li style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:7px"><span style="color:var(--mu2)">✕</span>Video library & analytics</li>
+      </ul>
+      <button class="btn bo bfl clickable" onclick="showPage('pgl')">Start Free</button>
+    </div>
+    <div style="background:var(--s2);padding:36px;text-align:left;border:1px solid rgba(244,208,63,0.14);position:relative">
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%) translateY(-1px);background:var(--go);color:#000;font-family:var(--fm);font-size:7px;letter-spacing:0.3em;padding:3px 14px">RECOMMENDED</div>
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:0.3em;padding:2px 9px;border:1px solid rgba(244,208,63,0.28);color:var(--go);background:var(--god);display:inline-block;margin-bottom:14px">⚡ PREMIUM</div>
+      <div style="font-family:var(--fo);font-size:48px;font-weight:900;letter-spacing:-0.03em;color:var(--go);margin-bottom:3px">₹99</div>
+      <div style="font-family:var(--fm);font-size:8px;color:var(--mu);letter-spacing:0.3em;margin-bottom:20px">PER MONTH</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--go)">✦</span>All 60+ skills fully unlocked</li>
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--go)">✦</span>Unlimited Claude AI coaching</li>
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--go)">✦</span>Full video library (HD)</li>
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--go)">✦</span>Multi-skill combined splits</li>
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--go)">✦</span>Body composition analytics</li>
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--go)">✦</span>OAP, OAH, OAM full paths</li>
+        <li style="font-size:12px;color:var(--tx);display:flex;align-items:center;gap:7px"><span style="color:var(--go)">✦</span>Dynamic & power elite skills</li>
+      </ul>
+      <button class="btn bg2 bfl clickable" onclick="openModal()">Upgrade to Premium →</button>
+    </div>
+  </div>
+</section>
+
+<!-- DISCLAIMER -->
+<section style="padding:32px 44px;max-width:860px;margin:0 auto">
+  <div style="padding:18px 22px;border:1px solid rgba(255,64,96,0.14);background:rgba(255,64,96,0.03);border-radius:3px">
+    <div style="font-family:var(--fm);font-size:7px;letter-spacing:0.4em;color:var(--r);margin-bottom:9px">⚠ IMPORTANT DISCLAIMER</div>
+    <p style="font-size:10px;color:rgba(255,100,120,0.72);line-height:1.9;font-family:var(--fm)">APEX provides fitness education and programming for informational purposes only. This is NOT a substitute for professional medical advice. Calisthenics training carries risks including muscle strains, tendon injuries, joint stress, and falls. By using APEX: (1) You train entirely at your own risk. (2) APEX and its creators accept ZERO liability for any injury, health issue, or damage from following any plan or advice on this platform. (3) Consult a licensed physician before starting any exercise program. (4) Stop immediately if you feel sharp pain — not discomfort, PAIN. Your body. Your responsibility. Train smart.</p>
+  </div>
+</section>
+
+<footer style="border-top:1px solid var(--bd);padding:32px 44px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+  <div style="font-family:var(--fm);font-size:9px;color:var(--mu);letter-spacing:0.2em">APEX — ELITE CALISTHENICS ENGINE © 2024</div>
+  <div style="font-family:var(--fm);font-size:9px;color:var(--mu2)">BUILT FOR ATHLETES WHO REFUSE TO QUIT</div>
+</footer>
+</div><!-- /landing -->
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div id="pgl">
+  <div class="lbox">
+    <div style="text-align:center;margin-bottom:22px">
+      <div style="font-family:var(--fo);font-size:17px;font-weight:900;letter-spacing:0.2em;margin-bottom:3px">APEX</div>
+      <div style="font-family:var(--fm);font-size:7px;letter-spacing:0.4em;color:var(--mu)">ELITE CALISTHENICS ENGINE</div>
+    </div>
+    <div class="lh">WELCOME<br>BACK</div>
+    <div class="ls">Sign in to access your skill progression dashboard, AI coach, and personalized plans.</div>
+    <button class="gbtn clickable" onclick="gLogin()"><div class="gic"></div>Continue with Google</button>
+    <button class="gbtn clickable" style="background:rgba(255,255,255,0.02);margin-bottom:0" onclick="guestL()"><span style="font-size:15px">👤</span>Continue as Guest</button>
+    <div class="dvd">or email</div>
+    <input type="email" class="fin" id="lem" placeholder="Email address"/>
+    <input type="password" class="fin" id="lpw" placeholder="Password"/>
+    <button class="btn bw bfl clickable" onclick="emailL()" style="margin-top:4px">Sign In →</button>
+    <div style="text-align:center;margin-top:12px;font-size:10px;color:var(--mu)">No account? <a href="#" style="color:var(--c);text-decoration:none" onclick="emailL();return false">Create one →</a></div>
+    <div class="disc"><p>⚠ By signing in you agree that APEX is not liable for any training injuries. You train at your own risk. Consult a physician before beginning.</p></div>
+    <button class="btn bgh bsm" style="margin-top:12px;width:100%" onclick="showLand()">← Back</button>
+  </div>
+</div>
+
+<!-- ═══════════ ONBOARDING ═══════════ -->
+<div id="pgo">
+  <div class="obox">
+    <div class="opg" id="opg">
+      <div class="opd on"></div><div class="opd"></div><div class="opd"></div><div class="opd"></div>
+    </div>
+    <div class="ost on" id="obs1">
+      <div class="tag" style="margin-bottom:9px">STEP 1 / 4 — EXPERIENCE</div>
+      <div class="oh">YOUR LEVEL?</div>
+      <div class="os">Be honest — the AI calibrates precisely to your current ability.</div>
+      <div class="og">
+        <div class="oo clickable" onclick="pick('level','beginner',this)"><span class="oi">🌱</span><div class="on2">Beginner</div><div class="od">0–6 months · building first pull-up</div></div>
+        <div class="oo clickable" onclick="pick('level','intermediate',this)"><span class="oi">⚡</span><div class="on2">Intermediate</div><div class="od">6mo–2yr · 10+ pull-ups, some skill work</div></div>
+        <div class="oo clickable" onclick="pick('level','advanced',this)"><span class="oi">🔥</span><div class="on2">Advanced</div><div class="od">2+ yr · muscle-ups done, skill training</div></div>
+        <div class="oo clickable" onclick="pick('level','elite',this)"><span class="oi">🏆</span><div class="on2">Elite</div><div class="od">Competition athlete, advanced skills</div></div>
+      </div>
+      <div style="margin-top:22px"><button class="btn bc bfl clickable" onclick="goOb(2)">Continue →</button></div>
+    </div>
+    <div class="ost" id="obs2">
+      <div class="tag" style="margin-bottom:9px">STEP 2 / 4 — PRIMARY GOAL</div>
+      <div class="oh">GOAL SKILL?</div>
+      <div class="os">What do you want to master first? Premium unlocks all 60+ simultaneously.</div>
+      <div class="og" id="sk-pick-grid" style="grid-template-columns:1fr 1fr 1fr;max-height:320px;overflow-y:auto;padding-right:4px"></div>
+      <div style="margin-top:22px;display:flex;gap:9px">
+        <button class="btn bgh clickable" onclick="goOb(1)">← Back</button>
+        <button class="btn bc bfl clickable" onclick="goOb(3)">Continue →</button>
+      </div>
+    </div>
+    <div class="ost" id="obs3">
+      <div class="tag" style="margin-bottom:9px">STEP 3 / 4 — YOUR STATS</div>
+      <div class="oh">BODY DATA</div>
+      <div class="os">Used for BMI, relative strength calculations, and load recommendations.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div><label class="flb">HEIGHT (CM)</label><input type="number" class="fin" id="ih" placeholder="175" value="175" style="margin:0"/></div>
+        <div><label class="flb">WEIGHT (KG)</label><input type="number" class="fin" id="iw" placeholder="70" value="70" style="margin:0"/></div>
+        <div><label class="flb">AGE</label><input type="number" class="fin" id="ia" placeholder="22" value="22" style="margin:0"/></div>
+        <div><label class="flb">TRAINING DAYS/WEEK</label><select class="fsl" id="id"><option value="3">3 days (recovery focus)</option><option value="4" selected>4 days (recommended)</option><option value="5">5 days (high freq)</option><option value="6">6 days (elite)</option></select></div>
+      </div>
+      <label class="flb">YOUR NAME</label><input type="text" class="fin" id="iname" placeholder="Your name" style="margin-bottom:0"/>
+      <div style="margin-top:20px;display:flex;gap:9px">
+        <button class="btn bgh clickable" onclick="goOb(2)">← Back</button>
+        <button class="btn bc bfl clickable" onclick="goOb(4)">Continue →</button>
+      </div>
+    </div>
+    <div class="ost" id="obs4">
+      <div class="tag" style="margin-bottom:9px">STEP 4 / 4 — AI KEY</div>
+      <div class="oh">AI COACH</div>
+      <div class="os">Add your Anthropic API key for full live AI coaching. Skip for expert pre-written responses.</div>
+      <div style="padding:12px;border:1px solid rgba(0,212,255,0.14);background:rgba(0,212,255,0.03);border-radius:3px;margin-bottom:14px">
+        <label class="flb">ANTHROPIC API KEY (OPTIONAL)</label>
+        <input type="password" class="fin" id="iapikey" placeholder="sk-ant-api03-..." style="margin:0"/>
+        <div style="font-size:9px;color:var(--mu);margin-top:7px;font-family:var(--fm)">Get free key at console.anthropic.com · Stored locally only, never sent to our servers</div>
+      </div>
+      <div style="padding:12px;border:1px solid rgba(244,208,63,0.1);background:rgba(244,208,63,0.02);border-radius:3px;margin-bottom:18px;font-size:10px;color:var(--mu);line-height:1.8">
+        <strong style="color:var(--go)">With key:</strong> Full live Claude AI coaching tailored to your exact situation.<br>
+        <strong style="color:var(--go)">Without key:</strong> Expert pre-written coaching for 40+ common calisthenics questions.
+      </div>
+      <div style="display:flex;gap:9px">
+        <button class="btn bgh clickable" onclick="goOb(3)">← Back</button>
+        <button class="btn bg2 bfl clickable" onclick="finishOb()">Generate My Plan ⚡</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ DASHBOARD ═══════════ -->
+<div id="pgd">
+  <aside class="sb" id="dsb">
+    <div class="su">
+      <div class="sav" id="sav">A</div>
+      <div><div class="sun" id="sbun">Athlete</div><div class="slv" id="sblv">ROOKIE</div></div>
+    </div>
+    <div class="sxp">
+      <div class="sxr"><div class="sxv" id="sbxp">0</div><div class="sxl">XP</div></div>
+      <div class="sbar"><div class="sbf" id="sbf" style="width:0%"></div></div>
+    </div>
+    <div class="sbl">TRAINING</div>
+    <div class="si on clickable" id="sn-home" onclick="showPanel('home')"><span class="sic">⊞</span>Dashboard</div>
+    <div class="si clickable" id="sn-tree" onclick="showPanel('tree')"><span class="sic">🌳</span>Skill Tree</div>
+    <div class="si clickable" id="sn-plan" onclick="showPanel('plan')"><span class="sic">📋</span>Workout Plan</div>
+    <div class="si clickable" id="sn-ai" onclick="showPanel('ai')"><span class="sic">🤖</span>AI Coach</div>
+    <div class="sbl">ANALYTICS</div>
+    <div class="si clickable" id="sn-progress" onclick="showPanel('progress')"><span class="sic">📈</span>Progress</div>
+    <div class="si clickable" id="sn-streak" onclick="showPanel('streak')"><span class="sic">🔥</span>Streak</div>
+    <div class="si clickable" id="sn-badges" onclick="showPanel('badges')"><span class="sic">🏆</span>Badges</div>
+    <div class="sbl">LEARN</div>
+    <div class="si clickable" id="sn-tips" onclick="showPanel('tips')"><span class="sic">💡</span>Tips & Fixes</div>
+    <div class="si clickable" id="sn-videos" onclick="showPanel('videos')"><span class="sic">🎬</span>Videos</div>
+    <div class="sbl">ACCOUNT</div>
+    <div class="si clickable" onclick="openModal()"><span class="sic">⚡</span>Upgrade Premium</div>
+    <div class="si clickable" onclick="showLand()"><span class="sic">←</span>Home</div>
+    <div class="schar" id="schar"></div>
+  </aside>
+  <div class="mp">
+    <!-- HOME -->
+    <div class="pnl on" id="pnl-home">
+      <div class="ph"><div class="pht">// OVERVIEW</div><h2 class="ptt">WELCOME, <span id="dname">ATHLETE</span></h2><p style="color:var(--mu);font-size:12px;margin-top:4px">Ready to push limits today?</p></div>
+      <div class="hsg">
+        <div class="hsc sc"><div class="hsv" id="hstr">0</div><div class="hsl">🔥 DAY STREAK</div></div>
+        <div class="hsc sx"><div class="hsv" id="hxp">0</div><div class="hsl">⚡ TOTAL XP</div></div>
+        <div class="hsc sp"><div class="hsv" id="hpr">0%</div><div class="hsl">GOAL PROGRESS</div></div>
+        <div class="hsc sw"><div class="hsv" id="hwk">0</div><div class="hsl">WORKOUTS DONE</div></div>
+      </div>
+      <div class="tc">
+        <div class="tch">
+          <div><div class="tag" style="margin-bottom:5px">// TODAY'S SESSION</div><div class="tct" id="tct">Loading...</div><div style="font-size:10px;color:var(--mu);margin-top:2px" id="tcfoc">—</div></div>
+          <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+            <span style="font-family:var(--fm);font-size:8px;padding:2px 8px;border:1px solid rgba(0,212,255,0.24);color:var(--c)" id="tcdayb">MON</span>
+            <button class="btn bw bsm clickable" onclick="completeWorkout()">Done ✓</button>
+          </div>
+        </div>
+        <div id="exlist"></div>
+      </div>
+      <div style="padding:16px;border:1px solid var(--bd);background:var(--s1);border-radius:3px">
+        <div class="tag" style="margin-bottom:7px">// NEXT MILESTONE</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:2px" id="msn">—</div>
+        <div style="font-size:10px;color:var(--mu);margin-bottom:10px" id="msd">Keep training.</div>
+        <div class="pb"><div class="pbf" id="msbar" style="width:0%;background:var(--c)"></div></div>
+        <div style="font-family:var(--fm);font-size:8px;color:var(--mu);margin-top:4px" id="mspct">0%</div>
+      </div>
+    </div>
+    <!-- SKILL TREE -->
+    <div class="pnl" id="pnl-tree">
+      <div class="ph"><div class="pht">// PROGRESSION MAP</div><h2 class="ptt">SKILL TREE</h2></div>
+      <div class="skt" id="sktabs"></div>
+      <div id="treecontent"></div>
+    </div>
+    <!-- PLAN -->
+    <div class="pnl" id="pnl-plan">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:22px">
+        <div><div class="pht">// AI GENERATED</div><h2 class="ptt">WEEKLY PLAN</h2></div>
+        <button class="btn bgh bsm clickable" onclick="buildPlan()">↻ Regenerate</button>
+      </div>
+      <div id="plancontent"></div>
+    </div>
+    <!-- AI COACH -->
+    <div class="pnl" id="pnl-ai">
+      <div class="ph"><div class="pht">// POWERED BY CLAUDE AI</div><h2 class="ptt">AI COACH</h2><p style="color:var(--mu);font-size:11px;margin-top:4px">Live coaching. Ask anything — form, plateau, nutrition, programming, recovery.</p></div>
+      <div class="aki" id="akiarea">
+        <div style="font-family:var(--fm);font-size:7px;letter-spacing:0.3em;color:var(--go);margin-bottom:4px">ANTHROPIC API KEY</div>
+        <input type="password" id="keydisp" placeholder="sk-ant-api03-... (Add for live AI)" onchange="saveKey(this.value)"/>
+      </div>
+      <div class="aisg" id="aisugg"></div>
+      <div class="aiw">
+        <div class="aim" id="aimsg"></div>
+        <div class="air">
+          <input type="text" class="ain" id="aiin" placeholder="Ask your AI coach..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+          <button class="btn bc clickable" onclick="sendMsg()">Send</button>
+        </div>
+      </div>
+    </div>
+    <!-- PROGRESS -->
+    <div class="pnl" id="pnl-progress">
+      <div class="ph"><div class="pht">// ANALYTICS</div><h2 class="ptt">PROGRESS</h2></div>
+      <div style="display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:22px">
+        <div class="prr">
+          <svg width="115" height="115"><circle cx="57" cy="57" r="50" fill="none" stroke="rgba(0,212,255,0.06)" stroke-width="6"/><circle cx="57" cy="57" r="50" fill="none" stroke="var(--c)" stroke-width="6" stroke-dasharray="314" id="pring" stroke-dashoffset="314" stroke-linecap="round"/></svg>
+          <div class="prl"><div class="prn" id="prn">0%</div><div class="prs">OVERALL</div></div>
+        </div>
+        <div style="flex:1;min-width:170px">
+          <div style="font-size:20px;font-weight:700;margin-bottom:2px" id="prskn">—</div>
+          <div style="font-family:var(--fm);font-size:8px;color:var(--mu);letter-spacing:0.18em;margin-bottom:9px" id="prlvl">—</div>
+          <div style="font-size:11px;color:var(--mu);line-height:1.7" id="prdesc">—</div>
+        </div>
+      </div>
+      <div class="prgd" id="prgrid"></div>
+      <div class="trc">
+        <div class="trt">⚡ TRANSFORMATION PREDICTION</div>
+        <div class="trb">You are <strong id="tpct">0%</strong> toward <strong id="tskill">your goal</strong>. At your pace, estimated unlock in <strong id="tdays">60–90 days</strong>. Consistent sleep, nutrition, and training = inevitable results.</div>
+      </div>
+    </div>
+    <!-- STREAK -->
+    <div class="pnl" id="pnl-streak">
+      <div class="ph"><div class="pht">// CONSISTENCY</div><h2 class="ptt">STREAK</h2></div>
+      <div class="sth">
+        <div class="stf">🔥</div>
+        <div><div class="stnum" id="stnum">0</div><div class="stlb">DAY STREAK</div><div class="stmg" id="stmsg">Start today!</div></div>
+      </div>
+      <div style="padding:16px;border:1px solid var(--bd);background:var(--s1);border-radius:3px">
+        <div class="tag" style="margin-bottom:12px">// THIS MONTH</div>
+        <div class="stcl" id="stcal"></div>
+      </div>
+      <div style="padding:16px;border:1px solid var(--bd);margin-top:9px;border-radius:3px;display:flex;gap:7px;flex-wrap:wrap" id="stmiles"></div>
+    </div>
+    <!-- BADGES -->
+    <div class="pnl" id="pnl-badges">
+      <div class="ph"><div class="pht">// ACHIEVEMENTS</div><h2 class="ptt">BADGES & LEVELS</h2></div>
+      <div class="lvc glass">
+        <div class="lvn" id="lvn">ROOKIE</div>
+        <div style="font-family:var(--fm);font-size:9px;color:var(--mu);margin-top:3px">Next: <span id="lvnx">WARRIOR</span> · <span id="lvxp">0/500 XP</span></div>
+        <div class="lvb"><div class="lvf" id="lvf" style="width:0%"></div></div>
+      </div>
+      <div class="bgg" id="bgg" style="margin-top:20px"></div>
+    </div>
+    <!-- TIPS -->
+    <div class="pnl" id="pnl-tips">
+      <div class="ph"><div class="pht">// TECHNIQUE</div><h2 class="ptt">TIPS & FIXES</h2></div>
+      <div class="skt" id="tipstabs"></div>
+      <div class="tpg" id="tipscontent"></div>
+    </div>
+    <!-- VIDEOS -->
+    <div class="pnl" id="pnl-videos">
+      <div class="ph">
+        <div class="pht">// TECHNIQUE LIBRARY</div>
+        <h2 class="ptt">VIDEO LIBRARY</h2>
+        <span style="font-family:var(--fm);font-size:7px;padding:2px 7px;border:1px solid rgba(244,208,63,0.28);color:var(--go);background:var(--god);margin-top:5px;display:inline-block">⚡ PREMIUM</span>
+      </div>
+      <div class="vdg" id="vidgrid"></div>
+      <div id="vidcta" style="display:none;text-align:center;padding:36px;border:1px solid var(--bd);margin-top:9px;border-radius:3px">
+        <div style="font-size:36px;margin-bottom:10px">🔒</div>
+        <div style="font-family:var(--fo);font-size:20px;font-weight:800;margin-bottom:7px;letter-spacing:0.05em">UNLOCK VIDEO LIBRARY</div>
+        <div style="color:var(--mu);font-size:11px;margin-bottom:18px">HD form demonstrations, slow-motion breakdowns, mistake analysis for all 60+ skills.</div>
+        <button class="btn bg2 clickable" onclick="openModal()">Upgrade to Premium →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mnav" id="mnav">
+  <button class="mb on" id="mb-home" onclick="showPanel('home')"><span class="mbi">⊞</span>Home</button>
+  <button class="mb" id="mb-tree" onclick="showPanel('tree')"><span class="mbi">🌳</span>Skills</button>
+  <button class="mb" id="mb-plan" onclick="showPanel('plan')"><span class="mbi">📋</span>Plan</button>
+  <button class="mb" id="mb-ai" onclick="showPanel('ai')"><span class="mbi">🤖</span>AI</button>
+  <button class="mb" id="mb-progress" onclick="showPanel('progress')"><span class="mbi">📈</span>Stats</button>
+</nav>
+
+<script>
+// ═══════════════════════════════════════
+// SPACE CANVAS
+// ═══════════════════════════════════════
+(function(){
+  const cv=document.getElementById('spc'),ctx=cv.getContext('2d');
+  let W,H,stars=[],nebs=[];
+  function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;stars=[];nebs=[];
+    for(let i=0;i<300;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+0.2,a:Math.random()*0.65+0.1,vx:(Math.random()-0.5)*0.07,vy:(Math.random()-0.5)*0.07,bl:Math.random()*Math.PI*2,bs:Math.random()*0.02+0.004});
+    for(let i=0;i<6;i++)nebs.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*140+70,c:['rgba(0,212,255,','rgba(157,78,221,','rgba(0,255,135,','rgba(244,208,63,'][i%4]});
+  }
+  resize();addEventListener('resize',resize);
+  let mx=W/2,my=H/2;
+  addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    nebs.forEach(n=>{const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);g.addColorStop(0,n.c+'0.035)');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill()});
+    const t=Date.now()/1000;
+    stars.forEach(s=>{
+      s.x+=s.vx;s.y+=s.vy;
+      if(s.x<0)s.x=W;if(s.x>W)s.x=0;if(s.y<0)s.y=H;if(s.y>H)s.y=0;
+      const da=Math.sin(t*s.bs+s.bl)*0.28;
+      const dx=s.x-mx,dy=s.y-my,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<110){s.x+=dx/d*0.25;s.y+=dy/d*0.25}
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${Math.min(0.9,s.a+da)})`;ctx.fill();
+      if(s.r>0.9){ctx.beginPath();ctx.arc(s.x,s.y,s.r*2.2,0,Math.PI*2);ctx.fillStyle=`rgba(0,212,255,${(s.a+da)*0.07})`;ctx.fill()}
+    });
+    stars.forEach((s,i)=>stars.slice(i+1).forEach(s2=>{const dx=s.x-s2.x,dy=s.y-s2.y,d=Math.sqrt(dx*dx+dy*dy);if(d<75){ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s2.x,s2.y);ctx.strokeStyle=`rgba(255,255,255,${0.025*(1-d/75)})`;ctx.lineWidth=0.3;ctx.stroke()}}));
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// CURSOR
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+let cx=0,cy=0,rx=0,ry=0;
+addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;cur.style.left=cx+'px';cur.style.top=cy+'px'});
+(function aC(){rx+=(cx-rx)*0.12;ry+=(cy-ry)*0.12;cur2.style.left=rx+'px';cur2.style.top=ry+'px';requestAnimationFrame(aC)})();
+addEventListener('scroll',()=>document.getElementById('tnav').classList.toggle('solid',scrollY>55));
+
+// ═══════════════════════════════════════
+// COMPLETE SKILLS DATABASE — 60+ SKILLS
+// ═══════════════════════════════════════
+const SK={
+  // ── PULL PATH (OAP & BEYOND) ──
+  archer_pu:{n:'Archer Pull-up',ic:'🏹',cat:'PULL',diff:'i',free:false,
+    desc:'Unilateral strength builder — one arm does the work while the other guides.',
+    lvls:[
+      {lbl:'FOUNDATION',nodes:[
+        {n:'Wide-Grip Pull-ups',s:'4×8',w:'Base of unilateral pulling. Go wide — shoulder-width plus a fist each side.',p:60},
+        {n:'Assisted Archer Hold',s:'5×10s each',w:'Hold extended-arm position at the top of a pull-up. Feel the stretch.',p:0},
+      ]},
+      {lbl:'TECHNIQUE',nodes:[
+        {n:'Partial Archer Pull-up',s:'3×5 each',w:'Pull to one side, partial ROM first. Increase range weekly.',p:0},
+        {n:'Full Archer Pull-up',s:'4×5 each',w:'Full ROM: chin over the working-arm hand. Extended arm stays straight.',p:0},
+      ]},
+      {lbl:'STRENGTH',nodes:[
+        {n:'Weighted Archer Pull-up +5kg',s:'3×4 each',w:'Progressive overload for OAP transition.',p:0},
+      ]},
+    ],
+    tips:[
+      {t:'fix',h:'Extended arm stays STRAIGHT',b:'The extended arm functions as a guide only — no pulling with it. If you feel it bending, you\'re cheating reps. Straight arm or it doesn\'t count.'},
+      {t:'tip',h:'Train both sides equally',b:'Dominant side will progress faster. Deliberately give the weaker side one extra set per session for 8 weeks.'},
+    ]
+  },
+  typewriter_pu:{n:'Typewriter Pull-up',ic:'⌨️',cat:'PULL',diff:'i',free:false,
+    desc:'Dynamic lateral shift at the top — builds unilateral control and lat width.',
+    lvls:[
+      {lbl:'PREREQUISITE',nodes:[
+        {n:'10 Clean Pull-ups',s:'Must achieve',w:'Need comfortable volume before typewriter practice.',p:50},
+        {n:'Wide-Grip Hold at Top',s:'5×10s',w:'Hold the top position with wide grip for time.',p:0},
+      ]},
+      {lbl:'MOVEMENT',nodes:[
+        {n:'Partial Typewriter Shift',s:'3×4 each dir',w:'Shift halfway, return to center, shift other way.',p:0},
+        {n:'Full Typewriter Pull-up',s:'3×4 reps',w:'Full lateral shift each side at top position. Control the movement.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'Control the shift — no swinging',b:'The shift should come from lateral pulling with the lats, not momentum. Slow and controlled beats fast every time.'}]
+  },
+  mixed_grip:{n:'Mixed Grip Pull-up',ic:'🤲',cat:'PULL',diff:'b',free:true,
+    desc:'One supinated, one pronated grip — trains anti-rotation and bicep asymmetry.',
+    lvls:[
+      {lbl:'FOUNDATION',nodes:[
+        {n:'Mixed Grip Dead Hang',s:'3×30s each config',w:'Get comfortable with the asymmetric grip before pulling.',p:70},
+        {n:'Mixed Grip Negatives',s:'3×5 each config',w:'Slow eccentrics in mixed grip position.',p:40},
+        {n:'Mixed Grip Pull-ups',s:'3×8 each config',w:'Alternate which hand is supinated each set.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Alternate grip each set',b:'Switch which hand is supinated each set to develop symmetric bicep and brachialis strength on both sides.'}]
+  },
+  uneven_pu:{n:'Uneven Pull-up',ic:'↕️',cat:'PULL',diff:'i',free:false,
+    desc:'One hand higher on bar or towel — OAP progression tool.',
+    lvls:[
+      {lbl:'BUILD',nodes:[
+        {n:'High/Low Grip Pull-up (close diff)',s:'4×5 each',w:'Hands 15cm apart vertically. Work the lower arm harder.',p:30},
+        {n:'High/Low Grip Pull-up (wide diff)',s:'4×5 each',w:'Hands 30cm apart vertically. Significant unilateral loading.',p:0},
+        {n:'Towel Uneven Pull-up',s:'3×4 each',w:'One hand on bar, other on towel. Bigger strength differential.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Focus on the lower arm',b:'Think of it as a pull-up done by the lower arm while the upper provides assistance. Mentally and physically focus 80% effort to the lower arm.'}]
+  },
+  towel_pu:{n:'Towel Pull-up',ic:'🏳️',cat:'PULL',diff:'i',free:false,
+    desc:'Pulling on a towel demands extreme grip, wrist, and forearm strength.',
+    lvls:[
+      {lbl:'GRIP BUILD',nodes:[
+        {n:'Towel Hang',s:'3×30s',w:'Simply hang. The instability is the training stimulus.',p:60},
+        {n:'Towel Negatives',s:'3×5 (5s lower)',w:'Jump up, lower yourself slowly on the towel.',p:30},
+        {n:'Towel Pull-ups',s:'3×8',w:'Full ROM pull-ups on a thick loop towel.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Thick towel = harder',b:'Use the thickest towel you can find. 3cm diameter towel trains grip far harder than a thin one. Rock climbing gyms use this for crimp training.'}]
+  },
+  lsit_pu:{n:'L-Sit Pull-up',ic:'📐',cat:'PULL',diff:'i',free:false,
+    desc:'Combine hip flexor compression with pulling — elite core and lat integration.',
+    lvls:[
+      {lbl:'COMPONENT SKILLS',nodes:[
+        {n:'L-Sit Hold (bar)',s:'5×15s',w:'Hold L-sit position hanging from bar before adding the pull.',p:50},
+        {n:'Tucked L-Sit Pull-up',s:'3×5',w:'Pull with knees tucked to chest. Easier compression.',p:0},
+        {n:'Full L-Sit Pull-up',s:'3×5',w:'Pull with legs fully extended horizontal. Elite compression.',p:0},
+      ]},
+    ],
+    tips:[{t:'mistake',h:'Legs dropping mid-pull',b:'Pre-activate your hip flexors HARD before starting the pull. Imagine pressing your legs against a wall. If legs drop, reduce to tuck L-sit version.'}]
+  },
+  weighted_pu:{n:'Weighted Pull-up',ic:'⚖️',cat:'PULL',diff:'i',free:false,
+    desc:'Progressive loading for raw pulling strength — key to OAP development.',
+    lvls:[
+      {lbl:'PROGRESSIVE LOADING',nodes:[
+        {n:'Weighted Pull-up +10kg',s:'4×5',w:'Use belt or weighted vest. Must have clean 15 bodyweight pull-ups first.',p:40},
+        {n:'Weighted Pull-up +20kg',s:'4×4',w:'Significant relative strength gain.',p:0},
+        {n:'Weighted Pull-up +30kg',s:'5×3',w:'Elite standard. OAP is typically achievable after this.',p:0},
+        {n:'Weighted Pull-up +40kg',s:'5×2',w:'Research shows OAP requires ~1.5–2× bodyweight equivalent. This is the threshold.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Weighted pull-ups are the #1 OAP builder',b:'Pure weighted pull-up progression outperforms most specific OAP drills for most people. Add 2.5kg when you can do 4×5 clean.'}]
+  },
+  ctb_pu:{n:'Explosive Chest-to-Bar',ic:'💥',cat:'PULL',diff:'i',free:false,
+    desc:'Maximum explosive pulling power — prerequisite for muscle-ups and dynamic moves.',
+    lvls:[
+      {lbl:'POWER BUILD',nodes:[
+        {n:'Fast Pull-ups',s:'4×6 (max speed)',w:'Pull as explosively as possible. Not for reps, for speed.',p:30},
+        {n:'Chest-to-Bar Pull-ups',s:'4×5',w:'Pull until sternum touches bar. Full explosive ROM.',p:0},
+        {n:'Explosive C2B with release',s:'3×3',w:'Explode and briefly release the bar at top. Clapping variation.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Hip drive + pull simultaneously',b:'A slight coordinated hip drive combined with max pulling speed generates chest-to-bar. It\'s not a kip — it\'s an explosive pull with hip timing.'}]
+  },
+  oa_assist_pu:{n:'One Arm Assisted Pull-up',ic:'☝️',cat:'PULL',diff:'a',free:true,
+    desc:'OAP with minimal band or finger assist — the final OAP bridge.',
+    lvls:[
+      {lbl:'ASSISTED OAP',nodes:[
+        {n:'Band-Assisted OAP (heavy band)',s:'3×4 each',w:'Thick band under knee. Still builds one-arm motor pattern.',p:20},
+        {n:'Finger-Assist OAP',s:'3×3 each',w:'2 fingers of free hand on the pulling arm for minimal help.',p:0},
+        {n:'Towel-Assist OAP',s:'3×3 each',w:'Free hand holds a hanging towel for minimal support.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Minimize the assist progressively',b:'Each week, consciously reduce how much help you give. Move from 4 fingers → 2 fingers → 1 finger. Track which finger you\'re using as your milestone.'}]
+  },
+  oa_neg:{n:'One Arm Negative Pull-up',ic:'📉',cat:'PULL',diff:'a',free:false,
+    desc:'5-second one-arm lowering — maximum eccentric strength for OAP.',
+    lvls:[
+      {lbl:'ONE ARM NEGATIVE',nodes:[
+        {n:'3s One Arm Negative',s:'3×3 each arm',w:'Jump chin over bar, release one hand, lower in 3 seconds.',p:15},
+        {n:'5s One Arm Negative',s:'4×3 each arm',w:'5-second controlled lowering. This builds OAP concentric strength.',p:0},
+        {n:'8s One Arm Negative',s:'3×2 each arm',w:'Extreme eccentric. OAP concentric often follows within weeks.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'FULL extension at the bottom',b:'You must reach complete arm extension at the bottom of every negative. Partial negatives train partial range. Tendon conditioning requires full ROM.'}]
+  },
+  oa_scap:{n:'One Arm Scapular Pull-up',ic:'🦴',cat:'PULL',diff:'a',free:false,
+    desc:'One-arm scapular retraction — builds the foundation lat engagement for OAP.',
+    lvls:[
+      {lbl:'SCAPULAR CONTROL',nodes:[
+        {n:'One Arm Dead Hang',s:'5×20s each',w:'Condition the shoulder and tendon for one-arm loading.',p:30},
+        {n:'One Arm Scapular Pull',s:'3×8 each',w:'One arm hanging: retract and depress scapula only. No elbow bend.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'This must be done weekly even after OAP',b:'Scapular health under single-arm load is a lifetime practice. Elite calisthenics athletes do one-arm scap pulls as maintenance for shoulder longevity.'}]
+  },
+  oap:{n:'One Arm Pull-up (OAP)',ic:'☝️',cat:'PULL',diff:'a',free:false,
+    desc:'The holy grail of pulling strength. One arm, bodyweight, full dead hang to chin over bar.',
+    lvls:[
+      {lbl:'FINAL APPROACH',nodes:[
+        {n:'OAP: 1 single rep each arm',s:'Max attempts',w:'The milestone. Full ROM, dead hang start, chin over bar.',p:0},
+        {n:'OAP: 3 consecutive reps',s:'Each arm',w:'Shows true strength, not luck.',p:0},
+        {n:'OAP: 5 reps each arm',s:'5 reps',w:'Elite standard.',p:0},
+      ]},
+    ],
+    tips:[
+      {t:'tip',h:'This is a 2–5 year goal for most',b:'Be realistic. Most athletes starting from zero take 2–5 years of consistent weighted pull-up progression to achieve OAP. It\'s a journey, not a quick win.'},
+      {t:'fix',h:'Body position matters',b:'Slight forward lean and rotating the body toward the pulling arm helps. Your free arm can be tucked or held behind you — find what keeps your body stable.'},
+    ]
+  },
+  oa_chin:{n:'One Arm Chin-up',ic:'👆',cat:'PULL',diff:'a',free:false,
+    desc:'OAP with supinated (underhand) grip — often slightly easier due to bicep advantage.',
+    lvls:[
+      {lbl:'PATH',nodes:[
+        {n:'Supinated OAP Negatives',s:'3×3 each (5s)',w:'Eccentric training with underhand grip for chin-up specific strength.',p:10},
+        {n:'Band-Assisted OAC',s:'3×4 each',w:'Full ROM chin-up on one arm with minimal band.',p:0},
+        {n:'One Arm Chin-up',s:'Accumulate 5 singles each',w:'The goal.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Often achieved before OAP',b:'The supinated grip gives ~15% bicep strength advantage. Many athletes achieve OAC before OAP. Use it as a stepping stone.'}]
+  },
+  oa_fl_pu:{n:'One Arm Front Lever Pull-up',ic:'⚓☝️',cat:'PULL',diff:'a',free:false,
+    desc:'Horizontal one-arm lever combined with pulling — the most elite pulling skill.',
+    lvls:[
+      {lbl:'PREREQUISITES',nodes:[
+        {n:'Full Front Lever',s:'Must achieve: 10s',w:'Non-negotiable prerequisite.',p:0},
+        {n:'One Arm Pull-up',s:'Must achieve: 5 reps',w:'Non-negotiable prerequisite.',p:0},
+        {n:'Straddle One Arm FL',s:'5×5s each',w:'One-arm lever position in straddle to reduce load.',p:0},
+        {n:'One Arm FL Pull',s:'3×1–2 each',w:'Pull from one-arm FL position. Extreme lat and core strength.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Takes 5–10 years realistically',b:'This is a lifetime skill. Athletes who achieve this are at world-class calisthenics level. Respect the timeline.'}]
+  },
+  // ── PUSH PATH ──
+  archer_push:{n:'Archer Push-up',ic:'🏹',cat:'PUSH',diff:'b',free:true,
+    desc:'Unilateral pushing — one arm pushes while the other extends.',
+    lvls:[
+      {lbl:'BUILD',nodes:[
+        {n:'Wide Push-up',s:'3×12',w:'Foundation. Wide hand position teaches the extended-arm feel.',p:60},
+        {n:'Partial Archer Push-up',s:'3×8 each',w:'Shift 60% weight to one side, back to center.',p:30},
+        {n:'Full Archer Push-up',s:'4×6 each',w:'One arm pushes full ROM, extended arm fully straight.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'Chest goes to the working-arm hand',b:'Your chest should touch the floor near your bent arm\'s hand, not the center. This is what makes it a true archer.'}]
+  },
+  typewriter_push:{n:'Typewriter Push-up',ic:'⌨️',cat:'PUSH',diff:'i',free:false,
+    desc:'Dynamic lateral shift at the bottom — builds pushing control and chest width.',
+    lvls:[
+      {lbl:'MOVEMENT',nodes:[
+        {n:'Wide Push-up Bottom Hold',s:'5×10s',w:'Hold the low position with wide hands for time.',p:50},
+        {n:'Partial Typewriter',s:'3×4 each dir',w:'Shift halfway, not full extended arm.',p:0},
+        {n:'Full Typewriter Push-up',s:'3×4 reps',w:'Shift all the way to extended arm each direction at bottom.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Lead with the chest, not the shoulder',b:'Think of dragging your chest laterally across the floor. This keeps the shoulder in a safe position throughout the shift.'}]
+  },
+  uneven_push:{n:'Uneven Push-up',ic:'↕️',cat:'PUSH',diff:'i',free:false,
+    desc:'One hand elevated on a block — OAP push-up progression.',
+    lvls:[
+      {lbl:'PROGRESSIVE ELEVATION',nodes:[
+        {n:'Uneven Push-up (fist height)',s:'3×8 each',w:'One hand on fist, one flat. Small elevation to start.',p:40},
+        {n:'Uneven Push-up (brick height)',s:'3×6 each',w:'One hand on a brick or book.',p:0},
+        {n:'Uneven Push-up (ball)',s:'3×5 each',w:'One hand on basketball. Major stability challenge.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'This directly builds OAP push-up',b:'Progressive elevation of the assisting hand is the clearest path to the one-arm push-up. Each height increase is a measurable milestone.'}]
+  },
+  pseudo_planche:{n:'Pseudo Planche Push-up',ic:'🛸',cat:'PUSH',diff:'i',free:false,
+    desc:'Forward lean push-up — the most important planche prep exercise.',
+    lvls:[
+      {lbl:'LEAN PROGRESSION',nodes:[
+        {n:'Planche Lean Hold',s:'5×30s',w:'Arms straight, lean until heels are light. This is the foundation.',p:50},
+        {n:'Pseudo Planche Push-up (shallow lean)',s:'3×8',w:'Push-up with slight forward lean. Fingers turned out.',p:20},
+        {n:'Pseudo Planche Push-up (deep lean)',s:'4×6',w:'Maximum forward lean. Shoulders should be past hands at bottom.',p:0},
+      ]},
+    ],
+    tips:[
+      {t:'fix',h:'Fingers MUST point outward or backward',b:'Pseudo planche push-ups with fingers forward causes chronic wrist pain. Rotate them out 45–90 degrees and the wrist stress disappears.'},
+      {t:'tip',h:'This is the most important planche exercise',b:'More planche athletes credit pseudo planche push-ups with their progress than any other exercise. Do these every planche session, every level.'},
+    ]
+  },
+  ring_push:{n:'Ring Push-up',ic:'🔵',cat:'PUSH',diff:'i',free:false,
+    desc:'Unstable pushing demands complete shoulder stabilization and pec activation.',
+    lvls:[
+      {lbl:'RING PUSH PROGRESSION',nodes:[
+        {n:'Ring Support Hold',s:'5×30s',w:'Simply hold the support position with rings turned out.',p:60},
+        {n:'Ring Push-up',s:'3×10',w:'Full ROM push-up on rings. RTO (rings turned out) at lockout.',p:30},
+        {n:'Ring Push-up (rings low)',s:'3×8',w:'Lower rings to increase difficulty. Body more horizontal.',p:0},
+        {n:'Ring Fly Transition',s:'3×5',w:'Widen hands during descent for pec stretch.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'RTO at every lockout',b:'Ring Turned Out (RTO) at the top of every rep is non-negotiable for shoulder health and correct muscle activation. Lazy lockout = injury risk over time.'}]
+  },
+  korean_dips:{n:'Korean Dips',ic:'🇰🇷',cat:'PUSH',diff:'a',free:false,
+    desc:'Behind-body dip — extreme shoulder extension and tricep demand.',
+    lvls:[
+      {lbl:'SHOULDER PREP',nodes:[
+        {n:'German Hang',s:'3×20s',w:'Absolute prerequisite. Korean dips without shoulder mobility = injury.',p:40},
+        {n:'Behind-Back Shoulder Stretch',s:'Daily 3min',w:'Prepare the shoulder capsule for extreme extension.',p:30},
+        {n:'Korean Dip (shallow)',s:'3×5',w:'Hands behind, shallow dip only. Feel the shoulder position.',p:0},
+        {n:'Full Korean Dip',s:'3×8',w:'Full ROM behind-body dip.',p:0},
+      ]},
+    ],
+    tips:[{t:'mistake',h:'NEVER do without shoulder mobility work',b:'Korean dips place extreme load on the shoulder in end-range extension. Athletes who skip shoulder prep get chronic shoulder injuries. German hangs first, always.'}]
+  },
+  str_bar_dips:{n:'Straight Bar Dips',ic:'📊',cat:'PUSH',diff:'i',free:false,
+    desc:'Dips on a straight bar demanding extreme wrist flexion and chest activation.',
+    lvls:[
+      {lbl:'BUILD',nodes:[
+        {n:'Bar Support Hold',s:'5×30s',w:'Get comfortable on a straight bar with wrists in extension.',p:60},
+        {n:'Bar Dips',s:'3×10',w:'Shoulders go BELOW the bar at bottom. Full chest engagement.',p:30},
+        {n:'Weighted Bar Dips +20kg',s:'4×5',w:'Strength overload for planche and muscle-up power.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'Go below the bar',b:'Straight bar dips require your shoulders to dip BELOW the bar level. Stopping at bar height is half a dip.'}]
+  },
+  hs_hold:{n:'Handstand Hold',ic:'🤸',cat:'PUSH',diff:'i',free:false,
+    desc:'Freestanding handstand — the cornerstone skill of all overhead pushing.',
+    lvls:[
+      {lbl:'WALL WORK',nodes:[
+        {n:'Wrist Conditioning',s:'Daily 5–8min',w:'Non-negotiable. Wrists carry 100% bodyweight. Skip this = injury.',p:80},
+        {n:'Chest-to-Wall HS',s:'5×30s',w:'Hollow body forced. Hands 15cm from wall.',p:50},
+        {n:'Kick-up Practice',s:'15 attempts/session',w:'Learning the inversion motor pattern.',p:0},
+      ]},
+      {lbl:'FREESTAND',nodes:[
+        {n:'5s Freestand Hold',s:'10 attempts/session',w:'The threshold.',p:0},
+        {n:'30s Freestand Hold',s:'3× in a session',w:'Solid handstand skill.',p:0},
+        {n:'60s Freestand Hold',s:'3× in a session',w:'Elite handstand control.',p:0},
+      ]},
+    ],
+    tips:[
+      {t:'mistake',h:'Banana back kills balance',b:'Squeeze glutes maximally, tuck pelvis, brace abs like taking a punch. Hollow body = balance is possible. Arched back = balance is impossible.'},
+      {t:'fix',h:'Fingertips control balance',b:'Press fingertips into floor to stop forward tip. Heel of hand stops backward tip. Balance = constant micro-adjustments, not stillness.'},
+    ]
+  },
+  wall_hspu:{n:'Wall Handstand Push-up',ic:'🧱',cat:'PUSH',diff:'i',free:false,
+    desc:'Overhead pressing in full inversion — builds elite shoulder strength.',
+    lvls:[
+      {lbl:'BUILD',nodes:[
+        {n:'Pike Push-up (elevated feet)',s:'3×10',w:'Feet on chair, hands on floor. Overhead press prep.',p:50},
+        {n:'Wall HSPU (head to floor)',s:'3×5',w:'Full ROM — head touches floor. Elbows at 45°, NOT flared.',p:0},
+        {n:'Wall HSPU (deficit)',s:'3×4',w:'Hands on elevated surface for extra ROM.',p:0},
+      ]},
+    ],
+    tips:[{t:'mistake',h:'Elbows MUST be at 45 degrees',b:'Flared elbows (90° from torso) in HSPU causes impingement and injury. Keep elbows at 45° — same position as a push-up. This engages front delts correctly.'}]
+  },
+  free_hspu:{n:'Freestanding HSPU',ic:'🤸‍♂️',cat:'PUSH',diff:'a',free:false,
+    desc:'Full handstand push-up without wall — balance + strength simultaneously.',
+    lvls:[
+      {lbl:'PREREQUISITES',nodes:[
+        {n:'60s Freestand Handstand',s:'Must achieve',w:'Need reliable handstand before adding pressing.',p:10},
+        {n:'5× Wall HSPU',s:'Must achieve',w:'Pressing strength prerequisite.',p:5},
+        {n:'Freestand HSPU (eccentric only)',s:'3×3',w:'Lower from freestand handstand slowly. No pressing up yet.',p:0},
+        {n:'Freestand HSPU: 1 rep',s:'Accumulate 5 singles',w:'The milestone.',p:0},
+        {n:'Freestand HSPU: 5 reps',s:'3×5',w:'Elite standard.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Kick-and-press technique first',b:'Many athletes learn freestand HSPU by kicking up and immediately pressing before setting their balance. This avoids the need to balance perfectly first.'}]
+  },
+  pike_push:{n:'Pike Push-up (Elevated)',ic:'▲',cat:'PUSH',diff:'b',free:true,
+    desc:'Elevated pike develops overhead pressing strength for handstand push-ups.',
+    lvls:[
+      {lbl:'ELEVATION PROGRESSION',nodes:[
+        {n:'Floor Pike Push-up',s:'3×12',w:'Hips high, head through arms at bottom, full lockout top.',p:80},
+        {n:'Pike Push-up (feet hip height)',s:'3×10',w:'Feet on bench or chair. More overhead angle.',p:50},
+        {n:'Pike Push-up (feet above head)',s:'3×8',w:'Feet higher than head — near vertical pressing.',p:0},
+        {n:'Pike Push-up (deficit)',s:'3×6',w:'Hands on plates for extra ROM.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'Head goes THROUGH hands, not to hands',b:'Aim to bring your head between your hands at the bottom. This is the correct overhead pressing path. Stopping with head outside hands is a half-rep.'}]
+  },
+  oa_push:{n:'One Arm Push-up (OAPush)',ic:'👊',cat:'PUSH',diff:'a',free:false,
+    desc:'Single-arm ground pressing — balance, anti-rotation, and raw push strength.',
+    lvls:[
+      {lbl:'BUILD',nodes:[
+        {n:'Uneven Push-up (max elevation)',s:'4×5 each',w:'Highest elevation you can. Near one-arm loading.',p:20},
+        {n:'OAP with feet wide',s:'4×4 each',w:'Wide feet reduce anti-rotation demand. Find your OAP.',p:0},
+        {n:'OAP with feet together',s:'3×3 each',w:'Strict form. Feet together = much harder.',p:0},
+        {n:'Weighted OAP +5kg',s:'3×3 each',w:'Once you have 5 reps bodyweight.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'Hips must stay square',b:'The hardest part of OAP isn\'t strength — it\'s anti-rotation. Keep hips perfectly level, prevent the body from twisting. Core engagement is 50% of OAP.'}]
+  },
+  oah:{n:'One Arm Handstand (OAH)',ic:'☝️🤸',cat:'PUSH',diff:'a',free:false,
+    desc:'Freestanding one-arm balance — the most elite gymnastics skill in calisthenics.',
+    lvls:[
+      {lbl:'PREREQUISITES',nodes:[
+        {n:'30s Freestand Handstand',s:'Must achieve consistently',w:'Non-negotiable. OAH without HS = impossible.',p:5},
+        {n:'Wall OAH Held',s:'5×5s each',w:'One arm against wall. Fingertip balance practice.',p:0},
+        {n:'Assisted OAH (finger assist)',s:'5×3s each',w:'Other hand gives minimal finger tip assistance.',p:0},
+        {n:'OAH: 3s hold',s:'10 attempts each arm',w:'The milestone. 3 seconds freestanding on one arm.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'5–15 years of training for most people',b:'OAH is a lifetime pursuit. Elite gymnasts train it for years. Embrace the journey. Many who chase it improve handstand dramatically along the way.'}]
+  },
+  oah_push:{n:'One Arm Handstand Push-up',ic:'☝️🏋️',cat:'PUSH',diff:'a',free:false,
+    desc:'Arguably the hardest bodyweight push skill in existence.',
+    lvls:[
+      {lbl:'PREREQUISITE',nodes:[
+        {n:'3s One Arm Handstand',s:'Must achieve',w:'If you can\'t hold it, you can\'t press it.',p:0},
+        {n:'OAH Push-up Eccentric',s:'3×2 each arm',w:'Lower from OAH very slowly. Strength building.',p:0},
+        {n:'OAH Push-up: 1 rep',s:'The milestone',w:'The rarest calisthenics achievement.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Fewer than 100 people in the world can do this',b:'Realistic context: OAH push-up is achieved by fewer people in the world than have climbed Everest. Pursue it as a lifetime goal.'}]
+  },
+  // ── CORE / LEVER ──
+  hang_lr:{n:'Hanging Leg Raise',ic:'🦵',cat:'CORE',diff:'b',free:true,
+    desc:'Foundation hanging core exercise. Full ROM leg raise builds the pull for advanced holds.',
+    lvls:[
+      {lbl:'FOUNDATION',nodes:[
+        {n:'Hanging Knee Raise',s:'3×12',w:'Knees to chest from dead hang. Core compression entry.',p:80},
+        {n:'Hanging Straight Leg Raise',s:'3×10',w:'Full leg extension. Toes to hands eventually.',p:50},
+        {n:'Windshield Wipers',s:'3×8 each dir',w:'Legs horizontal, rotate side to side. Oblique focus.',p:20},
+        {n:'Toes to Bar',s:'3×8',w:'Full range — toes touch bar at top. Elite hanging core.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'Stop the swing first',b:'Swinging makes every rep easier and develops bad habits. Dead stop each rep: hang still, raise, lower slowly, stop the swing, repeat.'}]
+  },
+  dragon_flag:{n:'Dragon Flag',ic:'🐉',cat:'CORE',diff:'i',free:false,
+    desc:'Bruce Lee\'s signature move. Full body lever on shoulders — elite spinal control.',
+    lvls:[
+      {lbl:'BUILD',nodes:[
+        {n:'Tucked Dragon Flag',s:'3×5',w:'Knees tucked, shoulder blades on bench, hips up.',p:40},
+        {n:'Single-Leg Dragon Flag',s:'3×4 each',w:'One leg extended. Increased lever.',p:0},
+        {n:'Full Dragon Flag',s:'3×5',w:'Body perfectly straight, descend and ascend controlled.',p:0},
+        {n:'Dragon Flag Negatives (8s lower)',s:'3×3',w:'Extreme eccentric loading.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'Shoulder blades must not move',b:'Your upper back stays anchored. ONLY your hips and below should lower. Any rounding of the upper back = failed rep.'}]
+  },
+  front_lever:{n:'Front Lever',ic:'⚓',cat:'CORE',diff:'a',free:false,
+    desc:'Horizontal body suspension — full body tension, elite lat and core.',
+    lvls:[
+      {lbl:'FOUNDATION',nodes:[
+        {n:'Arch Hangs',s:'5×20s',w:'Posterior shoulder loading — the exact position FL demands.',p:40},
+        {n:'Tuck Front Lever',s:'5×20s',w:'Knees to chest, body parallel to ground.',p:20},
+        {n:'Advanced Tuck FL',s:'5×15s',w:'Hips extended to 90°. Major difficulty increase.',p:0},
+      ]},
+      {lbl:'PROGRESSION',nodes:[
+        {n:'Single-Leg FL',s:'5×10s each',w:'One leg extended. Halfway between tuck and full.',p:0},
+        {n:'Straddle FL',s:'5×8s',w:'Both legs extended wide. Reduced moment arm.',p:0},
+        {n:'Full Front Lever',s:'5×5s',w:'The goal. Perfectly straight, parallel.',p:0},
+      ]},
+    ],
+    tips:[
+      {t:'mistake',h:'Hips dropping even 5cm = not a FL',b:'Regress immediately if hips drop. Quality holds at lower progressions build faster than failed attempts at higher ones.'},
+      {t:'fix',h:'Maximum scapular depression before attempt',b:'Pull shoulder blades DOWN as hard as possible. This is the primary muscle. Without it, the position collapses in under 2 seconds.'},
+    ]
+  },
+  fl_pull:{n:'Front Lever Pull-up',ic:'⚓⬆️',cat:'CORE',diff:'a',free:false,
+    desc:'Dynamic pulling from the FL position — maximum lat strength.',
+    lvls:[
+      {lbl:'FL PULL PROGRESSION',nodes:[
+        {n:'Tuck FL Pull',s:'3×3',w:'Pull from tuck FL to inverted hang. Dynamic transition.',p:10},
+        {n:'Straddle FL Pull',s:'3×3',w:'Pull from straddle FL position.',p:0},
+        {n:'Full FL Pull-up',s:'3×2',w:'Full FL to inverted hang. Extreme lat strength.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Combine with FL holds same session',b:'Do FL pulls at beginning of session when fresh, FL holds later. The dynamic work builds pulling strength; holds build positional strength.'}]
+  },
+  oa_fl:{n:'One Arm Front Lever',ic:'⚓☝️',cat:'CORE',diff:'a',free:false,
+    desc:'Horizontal hold on one arm — world-class level skill.',
+    lvls:[
+      {lbl:'PREREQUISITES',nodes:[
+        {n:'Full Front Lever 10s',s:'Must achieve',w:'Non-negotiable.',p:0},
+        {n:'Straddle One Arm FL',s:'5×5s each',w:'Straddle position with one arm. Dramatically reduces load.',p:0},
+        {n:'One Arm FL (tuck)',s:'5×3s each',w:'Tuck position on one arm.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Straddle version first, always',b:'The straddle one-arm FL reduces the moment arm dramatically. Most people can reach 5s straddle OA FL within 6 months of having a solid full FL.'}]
+  },
+  back_lever:{n:'Back Lever',ic:'🌀',cat:'CORE',diff:'i',free:false,
+    desc:'Posterior inversion and shoulder extension — facing-down horizontal hold.',
+    lvls:[
+      {lbl:'MOBILITY FIRST',nodes:[
+        {n:'German Hang',s:'3×20s',w:'MANDATORY shoulder extension prep. 4+ weeks before BL attempts.',p:50},
+        {n:'Skin the Cat',s:'3×8 slow',w:'Full shoulder circumduction. Builds BL-specific mobility.',p:30},
+        {n:'Tuck Back Lever',s:'5×10s',w:'First BL position. Knees tucked, body parallel.',p:0},
+      ]},
+      {lbl:'PROGRESSION',nodes:[
+        {n:'Advanced Tuck BL',s:'5×10s',w:'Hips extend to 90°.',p:0},
+        {n:'Single-Leg BL',s:'5×8s each',w:'One leg extended.',p:0},
+        {n:'Full Back Lever',s:'5×5s',w:'Both legs extended, body parallel, facing down.',p:0},
+      ]},
+    ],
+    tips:[{t:'mistake',h:'No German hang = shoulder injury',b:'Back lever places the shoulder in extreme extension under load. Unprepared shoulder capsules get injured. German hangs for 4+ weeks first, no exceptions.'}]
+  },
+  oa_bl:{n:'One Arm Back Lever',ic:'🌀☝️',cat:'CORE',diff:'a',free:false,
+    desc:'One-arm back lever — requires full BL and extraordinary shoulder extension strength.',
+    lvls:[
+      {lbl:'PATH',nodes:[
+        {n:'Full Back Lever 10s',s:'Must achieve',w:'Non-negotiable prerequisite.',p:0},
+        {n:'Assisted OA BL',s:'5×5s each',w:'Other hand gives minimal finger support.',p:0},
+        {n:'One Arm Back Lever',s:'5×3s each',w:'The skill.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'4–8 year realistic timeline from BL',b:'OA back lever is extraordinarily rare. If you achieve full BL, the straddle OA BL is the next reasonable step — expect years of progress.'}]
+  },
+  human_flag:{n:'Human Flag',ic:'🚩',cat:'CORE',diff:'a',free:false,
+    desc:'Lateral body suspension perpendicular to pole — one of calisthenics\'s most iconic skills.',
+    lvls:[
+      {lbl:'STRENGTH BUILD',nodes:[
+        {n:'Tuck Human Flag',s:'5×5s',w:'Knees tucked. Establish lateral compression pattern.',p:15},
+        {n:'Straddle Flag',s:'5×5s',w:'Legs spread. Reduced moment arm vs full.',p:0},
+        {n:'Full Human Flag',s:'5×3s',w:'Body completely straight, horizontal, perpendicular to pole.',p:0},
+      ]},
+    ],
+    tips:[
+      {t:'fix',h:'Top arm PUSHES, bottom arm PULLS',b:'The flag is an isometric: top arm pushing away from you, bottom arm pulling toward you simultaneously. Equal force in both arms keeps body horizontal.'},
+      {t:'tip',h:'Need extreme oblique + lat strength',b:'Train side planks, windshield wipers, and lateral pull patterns heavily. The flag fails more often from oblique weakness than lat weakness.'},
+    ]
+  },
+  oa_flag:{n:'One Arm Human Flag',ic:'🚩☝️',cat:'CORE',diff:'a',free:false,
+    desc:'One-arm lateral suspension — the single hardest static hold in calisthenics.',
+    lvls:[
+      {lbl:'PATH',nodes:[
+        {n:'Full Human Flag 5s',s:'Must achieve',w:'Non-negotiable.',p:0},
+        {n:'Tuck One Arm Flag',s:'5×2s each',w:'Knees tucked on one arm. The entry point.',p:0},
+        {n:'One Arm Human Flag',s:'Attempt 3s each',w:'The most elite static hold in existence.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Fewer than 50 documented instances worldwide',b:'This is not hyperbole. The OA human flag may be the rarest documented calisthenics achievement. Pursue it as a multi-decade project.'}]
+  },
+  // ── PLANCHE PATH ──
+  planche_lean:{n:'Planche Lean',ic:'📐',cat:'PLANCHE',diff:'i',free:false,
+    desc:'THE most important planche exercise. Wrist, shoulder, and forward lean conditioning.',
+    lvls:[
+      {lbl:'FOUNDATION',nodes:[
+        {n:'Wrist Conditioning (8 weeks)',s:'10min daily',w:'Wrists carry 100% load in extreme extension. Condition for 8 weeks minimum.',p:30},
+        {n:'Planche Lean (heels barely off)',s:'5×20s',w:'Straight arms, lean until heels just lift. Protract shoulders.',p:0},
+        {n:'Planche Lean (deep)',s:'5×30s',w:'Maximum forward lean — shoulders significantly past hands.',p:0},
+      ]},
+    ],
+    tips:[
+      {t:'fix',h:'PROTRACT scapulae — push floor away',b:'Round your upper back by pushing shoulder blades FORWARD. This is opposite of front lever. Protraction = planche. Retraction = front lever. Mix them up and you go nowhere.'},
+      {t:'mistake',h:'Fingers forward = wrist injury',b:'Rotate fingers outward or backward immediately. Chronic wrist pain from planche is almost always caused by incorrect hand position.'},
+    ]
+  },
+  tuck_planche:{n:'Tuck Planche',ic:'🛸',cat:'PLANCHE',diff:'i',free:false,
+    desc:'First true planche position — arms straight, hips at shoulder height, knees tucked.',
+    lvls:[
+      {lbl:'TUCK PLANCHE',nodes:[
+        {n:'Frog Stand',s:'5×30s',w:'Arms inside knees, lean forward, feet lift. Balance + wrist loading.',p:50},
+        {n:'Tuck Planche Hold',s:'5×10s',w:'Knees to chest, hips at shoulder height, arms COMPLETELY straight.',p:0},
+        {n:'Tuck Planche: 20s',s:'5×20s',w:'Consolidating the position.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'Arms must be completely straight',b:'ANY bend in the elbows is not a planche — it\'s just a support hold. Straight arms only. This is what makes planche so demanding on the tendons.'}]
+  },
+  adv_tuck_planche:{n:'Advanced Tuck Planche',ic:'🛸+',cat:'PLANCHE',diff:'a',free:false,
+    desc:'Hips extend back — the hardest difficulty jump in the entire planche progression.',
+    lvls:[
+      {lbl:'ADV TUCK',nodes:[
+        {n:'Band-Assisted ATP',s:'5×20s',w:'Band support to practice the extended hip position.',p:20},
+        {n:'Advanced Tuck Planche',s:'5×8s',w:'Hips extend back. Back parallel to ground. This is significantly harder.',p:0},
+        {n:'ATP: 15s',s:'5×15s',w:'Extended hold.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Most people plateau here for months',b:'The advanced tuck planche is the hardest single progression in planche. Most athletes spend 3–6 months here. That is completely normal. Use band assistance and be patient.'}]
+  },
+  straddle_planche:{n:'Straddle Planche',ic:'🛸++',cat:'PLANCHE',diff:'a',free:false,
+    desc:'Legs wide — reduces moment arm vs full planche. The penultimate step.',
+    lvls:[
+      {lbl:'STRADDLE',nodes:[
+        {n:'Band-Assisted Straddle Planche',s:'5×20s',w:'Bands are not cheating. They are mandatory for proper conditioning.',p:10},
+        {n:'Straddle Planche',s:'5×5s',w:'Legs as wide as possible. Hips at shoulder height.',p:0},
+        {n:'Straddle Planche: 10s',s:'5×10s',w:'Building duration.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Wider straddle = easier',b:'Open your legs as wide as flexibility allows. There is no rule about straddle width. Maximum width = minimum difficulty. Progressively narrow over months.'}]
+  },
+  full_planche:{n:'Full Planche',ic:'🛸⭐',cat:'PLANCHE',diff:'a',free:false,
+    desc:'THE apex of pushing strength. Full body horizontal on hands, legs together.',
+    lvls:[
+      {lbl:'FULL PLANCHE',nodes:[
+        {n:'Full Planche: 1s',s:'Max attempts',w:'The milestone. Just touch it.',p:0},
+        {n:'Full Planche: 3s',s:'5 attempts',w:'Showing it is real, not lucky.',p:0},
+        {n:'Full Planche: 5s',s:'5×5s',w:'The standard.',p:0},
+        {n:'Full Planche: 10s',s:'3×10s',w:'Elite world-class standard.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'3–7 years for most athletes',b:'With consistent proper training from zero, expect 3–7 years to full planche. Athletes who say they did it faster usually have exceptional genetics or exceptional training history.'}]
+  },
+  planche_pu:{n:'Planche Push-ups',ic:'🛸🔄',cat:'PLANCHE',diff:'a',free:false,
+    desc:'Dynamic pressing in planche position — the elite standard.',
+    lvls:[
+      {lbl:'PLANCHE PRESSING',nodes:[
+        {n:'Tuck Planche Push-up',s:'3×5',w:'First dynamic planche movement.',p:10},
+        {n:'Straddle Planche Push-up',s:'3×3',w:'Straddle position pressing.',p:0},
+        {n:'Full Planche Push-up',s:'3×2',w:'The milestone.',p:0},
+        {n:'Full Planche Push-up: 5 reps',s:'3×5',w:'Elite athletic achievement.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Use bands for planche push-up practice',b:'Even with a full planche, banded planche push-ups let you accumulate more volume than raw attempts. This builds the pressing strength faster.'}]
+  },
+  oa_planche:{n:'One Arm Planche',ic:'🛸☝️',cat:'PLANCHE',diff:'a',free:false,
+    desc:'The theoretical maximum of pushing — one arm supporting full body horizontal.',
+    lvls:[
+      {lbl:'PATH',nodes:[
+        {n:'Full Planche 5s',s:'Must achieve',w:'Non-negotiable.',p:0},
+        {n:'One Arm Planche Lean',s:'5×20s each',w:'One arm forward lean with other arm behind back.',p:0},
+        {n:'OA Tuck Planche',s:'5×3s each',w:'One arm planche in tuck position.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Perhaps 10–20 people alive can do this',b:'OA planche is the rarest bodyweight skill. It requires extraordinary tendon conditioning that takes decades. Some argue it is physiologically impossible for most humans.'}]
+  },
+  // ── DYNAMIC / POWER ELITE ──
+  muscle_up:{n:'Muscle-Up',ic:'🦅',cat:'DYNAMIC',diff:'i',free:false,
+    desc:'The king of bar movements — explosive pull transitioning to push. Every calisthenics athlete\'s goal.',
+    lvls:[
+      {lbl:'PREREQUISITES',nodes:[
+        {n:'15 Strict Pull-ups',s:'Must achieve',w:'Non-negotiable. MU without this = injury and bad habits.',p:40},
+        {n:'15 Bar Dips',s:'Must achieve',w:'The pushing half. Need both.',p:30},
+        {n:'Explosive Chest-to-Bar',s:'3×5',w:'The pulling mechanic of the muscle-up.',p:0},
+      ]},
+      {lbl:'TRANSITION',nodes:[
+        {n:'False Grip Hang',s:'3×30s',w:'Wrist folded over bar. The transition becomes a press, not a flip.',p:0},
+        {n:'Banded Muscle-up',s:'3×5',w:'Full movement with false grip. Keep grip throughout.',p:0},
+        {n:'First Muscle-Up',s:'Accumulate 5 singles',w:'The milestone.',p:0},
+      ]},
+      {lbl:'MASTERY',nodes:[
+        {n:'5 Consecutive Muscle-ups',s:'1×5',w:'Consistent technique.',p:0},
+        {n:'10 Consecutive Muscle-ups',s:'1×10',w:'Elite bar standard.',p:0},
+      ]},
+    ],
+    tips:[
+      {t:'tip',h:'Think HIPS TO BAR — not chin to bar',b:'When you drive hips explosively toward bar, body tilts, creating the transition momentum. Chin-to-bar thinking = vertical body = impossible transition.'},
+      {t:'fix',h:'False grip prevents "chicken winging"',b:'The single biggest muscle-up mistake is losing the false grip. Practice hanging in false grip for 30s daily for 2 weeks before attempting MU.'},
+    ]
+  },
+  slow_mu:{n:'Slow Muscle-Up',ic:'🦅🐢',cat:'DYNAMIC',diff:'a',free:false,
+    desc:'Full muscle-up with no momentum — 5 second transition. Pure strength.',
+    lvls:[
+      {lbl:'SLOW MU',nodes:[
+        {n:'10 Strict Muscle-ups',s:'Must achieve',w:'Need comfortable MU volume first.',p:20},
+        {n:'Slow Transition: 3s',s:'3×3',w:'Slow down the transition phase to 3 seconds.',p:0},
+        {n:'Slow Transition: 5s',s:'3×2',w:'5-second controlled transition. Strict form only.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Slow MU requires near-OAP pulling strength',b:'A true 5-second slow muscle-up requires you to maintain pulling force throughout the transition without momentum. Athletes with weighted pull-up 1RM of +30kg achieve this.'}]
+  },
+  oa_mu:{n:'One Arm Muscle-Up (OAM)',ic:'🦅☝️',cat:'DYNAMIC',diff:'a',free:false,
+    desc:'Single-arm muscle-up — one of the rarest achievements in bar calisthenics.',
+    lvls:[
+      {lbl:'PATH',nodes:[
+        {n:'5 Strict Muscle-ups',s:'Must achieve',w:'Prerequisite.',p:0},
+        {n:'One Arm Pull-up',s:'Must achieve',w:'Pulling prerequisite.',p:0},
+        {n:'OAM Attempt',s:'Training toward first single',w:'The goal.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Extremely rare — fewer than 500 people worldwide',b:'OA muscle-up requires OAP strength plus technical transition mastery. A realistic multi-year goal after achieving both prerequisites.'}]
+  },
+  explosive_mu:{n:'Explosive Muscle-Up',ic:'💥🦅',cat:'DYNAMIC',diff:'i',free:false,
+    desc:'Maximum height muscle-up — explosive enough to clear the bar completely.',
+    lvls:[
+      {lbl:'EXPLOSIVE POWER',nodes:[
+        {n:'10 Muscle-ups',s:'Must achieve',w:'Need base volume.',p:20},
+        {n:'Hip-Drive Explosiveness',s:'3×5 (max height)',w:'Drive hips as high as possible each rep.',p:0},
+        {n:'Explosive MU (chest height)',s:'3×3',w:'Clear bar to chest level.',p:0},
+        {n:'Explosive MU (hip height)',s:'3×2',w:'Clear bar to hip level.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Plyometric pull-up training transfers',b:'Train explosive chest-to-bar and clap pull-ups to build the specific explosive power for high muscle-ups.'}]
+  },
+  mu_360:{n:'360 Muscle-Up',ic:'🔄🦅',cat:'DYNAMIC',diff:'a',free:false,
+    desc:'Full 360° rotation during the muscle-up — power and spatial awareness combined.',
+    lvls:[
+      {lbl:'SPIN PROGRESSION',nodes:[
+        {n:'10 Explosive Muscle-ups',s:'Must achieve',w:'Need height to complete rotation.',p:15},
+        {n:'90° Spin MU',s:'Practice 5×',w:'Quarter turn. Land balanced.',p:0},
+        {n:'180° Spin MU',s:'Practice 5×',w:'Half turn.',p:0},
+        {n:'360° Muscle-Up',s:'The milestone',w:'Full rotation, controlled landing.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Height is everything',b:'You cannot spin 360° unless you clear the bar with enough height. Get your explosive MU to hip height first.'}]
+  },
+  bar_spin_360:{n:'Bar Spin 360',ic:'🌀',cat:'DYNAMIC',diff:'a',free:false,
+    desc:'Full body rotation around the bar — dynamic power and grip control.',
+    lvls:[
+      {lbl:'PROGRESSION',nodes:[
+        {n:'Bar Spin 90° (each dir)',s:'Practice 10×',w:'Swing to 90°, control landing.',p:20},
+        {n:'Bar Spin 180°',s:'Practice 10×',w:'Half rotation.',p:0},
+        {n:'Full Bar Spin 360°',s:'The milestone',w:'Complete rotation, stick the landing.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Learn the fall direction first',b:'Before attempting full spins, learn to safely fall in the direction of rotation. Practice landing skills before committing to full 360.'}]
+  },
+  bar_spin_540:{n:'Bar Spin 540',ic:'💫',cat:'DYNAMIC',diff:'a',free:false,
+    desc:'540° rotation around the bar — elite dynamic power skill.',
+    lvls:[
+      {lbl:'PROGRESSION',nodes:[
+        {n:'Bar Spin 360 consistent',s:'Must achieve 10× clean',w:'360 must be automatic before 540.',p:0},
+        {n:'Bar Spin 450°',s:'Practice 10×',w:'Intermediate step.',p:0},
+        {n:'Bar Spin 540°',s:'The milestone',w:'1.5 full rotations.',p:0},
+      ]},
+    ],
+    tips:[{t:'tip',h:'Grip transition is critical',b:'At 360° you must shift grip to continue the rotation. Practice the grip shift at low speed before adding the power for 540.'}]
+  },
+  swing_360:{n:'Swing 360',ic:'⭕',cat:'DYNAMIC',diff:'i',free:false,
+    desc:'360° body rotation using momentum from a kip swing — foundational bar dynamic skill.',
+    lvls:[
+      {lbl:'KIPPING FOUNDATION',nodes:[
+        {n:'Kip Swing',s:'3×10',w:'Build the pendulum swing mechanics.',p:50},
+        {n:'180° Swing',s:'Practice 10×',w:'Use swing momentum to rotate halfway.',p:0},
+        {n:'Full 360° Swing',s:'The milestone',w:'Complete rotation using kip momentum.',p:0},
+      ]},
+    ],
+    tips:[{t:'fix',h:'The kip is the engine',b:'The swing 360 is about optimizing kip timing and body position to generate rotational momentum. Practice perfect kip mechanics before adding the rotation.'}]
+  },
+};
+
+// FREE TIER CONFIGURATION
+const FREE_BEGINNER=['mixed_grip','hang_lr','pike_push'];
+const FREE_INTERMEDIATE=['archer_pu','archer_push','hs_hold','muscle_up','lsit_pu'];
+const FREE_ADVANCED=['oa_assist_pu','free_hspu'];
+function canAccess(key){
+  if(ST.premium)return true;
+  return FREE_BEGINNER.includes(key)||FREE_INTERMEDIATE.includes(key)||FREE_ADVANCED.includes(key);
+}
+
+// CATEGORIES
+const CATS={
+  'PULL':{label:'PULL PATH — OAP & Beyond',col:'var(--c)',ic:'💪'},
+  'PUSH':{label:'PUSH PATH — OAH / OAPush / Planche',col:'var(--p)',ic:'👊'},
+  'CORE':{label:'CORE / LEVER — Elite Tension',col:'var(--g)',ic:'⚓'},
+  'PLANCHE':{label:'PLANCHE — Highest Push Category',col:'var(--go)',ic:'🛸'},
+  'DYNAMIC':{label:'DYNAMIC / POWER ELITE',col:'var(--r)',ic:'💥'},
+};
+
+// WORKOUT PLANS
+function genPlan(skillKey,level){
+  const sk=SK[skillKey];
+  const plans={
+    beginner:{
+      MON:{f:'PULL',t:'Foundation Pull — Skill Specific',ex:[
+        {n:'Dead Hang',s:3,r:'45s',rest:'60s',cat:'pl',note:'Full decompression. Critical tendon conditioning.'},
+        {n:'Scapular Pull-ups',s:3,r:'12',rest:'60s',cat:'pl',note:'Lat engagement without elbow bend. Arms stay straight.'},
+        {n:'Negative Pull-ups',s:4,r:'5×5s lower',rest:'90s',cat:'pl',note:'Jump chin over bar, lower in EXACTLY 5 seconds.'},
+        {n:'Band Pull-apart',s:3,r:'15',rest:'45s',cat:'pl',note:'Rear delt and external rotation health.'},
+      ]},
+      TUE:{f:'PUSH',t:'Push Strength — Shoulder Priority',ex:[
+        {n:'Pike Push-up',s:3,r:'12',rest:'60s',cat:'ps',note:'Hips high, head through arms at bottom.'},
+        {n:'Dips',s:3,r:'10',rest:'75s',cat:'ps',note:'Shoulders below elbows at bottom. Full lockout top.'},
+        {n:'Diamond Push-up',s:3,r:'10',rest:'60s',cat:'ps',note:'Tricep focus. Elbows track back, not out.'},
+        {n:'Hollow Body Hold',s:3,r:'30s',rest:'45s',cat:'co',note:'Lower back FLAT. Arms overhead. The foundation.'},
+      ]},
+      WED:{f:'REST',t:'Active Recovery',ex:[
+        {n:'Mobility Flow',s:1,r:'20min',rest:'—',cat:'mb',note:'Shoulder circles, wrist conditioning, hip flexors.'},
+        {n:'Light Walk',s:1,r:'25min',rest:'—',cat:'mb',note:'Blood flow and active recovery.'},
+      ]},
+      THU:{f:'PULL+CORE',t:'Volume Pull + Core',ex:[
+        {n:'Band-Assisted Pull-ups',s:4,r:'8',rest:'90s',cat:'pl',note:'Medium band. Focus on lat engagement at bottom.'},
+        {n:'Inverted Rows',s:3,r:'12',rest:'60s',cat:'pl',note:'Horizontal pull. Retract scapulae at top.'},
+        {n:'Hanging Leg Raise',s:3,r:'10',rest:'45s',cat:'co',note:'Dead stop each rep. Control the swing.'},
+        {n:'L-Sit Attempt',s:5,r:'10s',rest:'30s',cat:'co',note:'Parallel bars. Full scapular depression.'},
+      ]},
+      FRI:{f:'PUSH+SKILL',t:'Push Volume + Skill Practice',ex:[
+        {n:'Planche Lean',s:5,r:'20s',rest:'60s',cat:'ps',note:'Shoulders past hands. Protract. Core tight.'},
+        {n:'Wrist Conditioning',s:1,r:'8min',rest:'—',cat:'mb',note:'Circles, extensions, compressions. Every session.'},
+        {n:'Ring Push-ups',s:3,r:'8',rest:'75s',cat:'ps',note:'RTO at every lockout. Control the instability.'},
+        {n:'Pike Push-up Elevated',s:3,r:'8',rest:'60s',cat:'ps',note:'Feet on chair. Increases overhead angle.'},
+      ]},
+      SAT:{f:'SKILL',t:'Skill Focus Day',ex:[
+        {n:'Skill Practice A',s:6,r:'10–15s/3 reps',rest:'varies',cat:'pl',note:'Current skill progression — dedicated practice.'},
+        {n:'Mobility + Flexibility',s:1,r:'20min',rest:'—',cat:'mb',note:'Targeted stretching for your specific skill.'},
+      ]},
+      SUN:{f:'REST',t:'Full Rest',ex:[{n:'Complete Rest',s:1,r:'—',rest:'—',cat:'mb',note:'Sleep 8h minimum. Growth happens during recovery.'}]},
+    },
+    intermediate:{
+      MON:{f:'PULL',t:'Heavy Pull Day',ex:[
+        {n:'Strict Pull-ups',s:5,r:'6–8',rest:'2min',cat:'pl',note:'Dead hang each rep. No kip. RPE 8.'},
+        {n:'Weighted Pull-up (+5–10kg)',s:4,r:'5',rest:'2min',cat:'pl',note:'Progressive overload. Add 2.5kg when 4×5 clean.'},
+        {n:'Archer Pull-ups',s:3,r:'5 each',rest:'90s',cat:'pl',note:'Extended arm stays STRAIGHT.'},
+        {n:'Face Pulls',s:3,r:'15',rest:'45s',cat:'pl',note:'External rotation. Shoulder longevity.'},
+      ]},
+      TUE:{f:'PUSH+SKILL',t:'Push + Primary Skill Work',ex:[
+        {n:'Handstand Practice',s:1,r:'15min',rest:'varies',cat:'ps',note:'Kick-up attempts, wall work, balance.'},
+        {n:'Ring Dips',s:3,r:'8',rest:'90s',cat:'ps',note:'RTO at top. Full ROM.'},
+        {n:'Pseudo Planche Push-ups',s:5,r:'8',rest:'60s',cat:'ps',note:'Deep lean, fingers out. Key planche builder.'},
+        {n:'Pike HSPU (feet elevated)',s:3,r:'6',rest:'90s',cat:'ps',note:'High feet, near-vertical pressing angle.'},
+      ]},
+      WED:{f:'REST',t:'Mobility & Recovery',ex:[
+        {n:'Yoga / Mobility Flow',s:1,r:'30min',rest:'—',cat:'mb',note:'Shoulders, hips, hamstrings focus.'},
+      ]},
+      THU:{f:'PULL SKILL',t:'Skill Pull + Volume',ex:[
+        {n:'Muscle-Up Practice',s:4,r:'3–5',rest:'2min',cat:'pl',note:'Full false grip. Technique focus.'},
+        {n:'L-Sit Pull-ups',s:3,r:'4',rest:'90s',cat:'pl',note:'L-sit position throughout.'},
+        {n:'Front Lever Progression',s:5,r:'10–15s',rest:'90s',cat:'co',note:'Current level hold. Maximum tension.'},
+        {n:'Explosive Chest-to-Bar',s:3,r:'5',rest:'90s',cat:'pl',note:'Maximum explosion.'},
+      ]},
+      FRI:{f:'PUSH STRENGTH',t:'Push Max Effort',ex:[
+        {n:'HSPU (wall)',s:4,r:'5',rest:'2min',cat:'ps',note:'Full ROM — head to floor. Elbows at 45°.'},
+        {n:'Weighted Dips (+10–15kg)',s:4,r:'5',rest:'2min',cat:'ps',note:'Strength overload.'},
+        {n:'Ring Push-ups (rings low)',s:3,r:'8',rest:'75s',cat:'ps',note:'More horizontal = harder.'},
+        {n:'Planche Progression',s:5,r:'10–15s',rest:'90s',cat:'ps',note:'Current level. Perfect protraction.'},
+      ]},
+      SAT:{f:'SKILL',t:'Skill Consolidation',ex:[
+        {n:'Primary Skill Session',s:1,r:'20–25min',rest:'varies',cat:'pl',note:'Deep practice on your current goal skill.'},
+        {n:'Secondary Skill Session',s:1,r:'15min',rest:'varies',cat:'ps',note:'Supporting skill practice.'},
+      ]},
+      SUN:{f:'REST',t:'Full Rest',ex:[{n:'Complete Rest',s:1,r:'—',rest:'—',cat:'mb',note:'Recovery is training. Don\'t skip it.'}]},
+    }
+  };
+  return plans[level]||plans.beginner;
+}
+
+// FALLBACK AI RESPONSES
+const AIFB={
+  default:`I'm your **APEX AI Coach**. ${''}\n\nI know your profile and can give specific advice. Common questions I handle well:\n\n• **Specific form fixes** for any skill\n• **Plateau breaking** strategies\n• **When to progress** to next node\n• **Nutrition** for calisthenics athletes\n• **Recovery** and injury prevention\n• **Programming** questions\n\nAdd your Anthropic API key above for fully live Claude AI coaching.`,
+  pullup:`**Pull-up Progression (Your Level):**\n\n**If 0 pull-ups:** Do negatives 3×5 (5s lower) and dead hangs 3×45s, 4–5× per week. GTG method: 40% of max, 5–8× throughout day, never fail.\n\n**If 1–5 pull-ups:** Add band assists 3×8 same days as negatives. Hit pull-ups 4× per week. Frequency is more important than volume.\n\n**If 5–10:** Move to weighted pull-ups immediately (+2.5kg). Progressive overload is the only way to break this ceiling. Chin-ups (supinated) often easier — use them as supplemental.\n\n**The GTG secret:** 40% of max reps, multiple times daily, zero failure. This single method gets more people their first pull-up than anything else.`,
+  form:`**Universal Form Principles:**\n\n**Pull-up:** Dead hang start (100% arm extension) → lat engagement (proud chest, shoulders down) → pull elbows to hips (not hands to bar) → chin fully over bar → controlled descent.\n\n**Dip:** Support position → lean slightly forward → shoulders descend BELOW elbows → full press to lockout with RTO.\n\n**Handstand:** Hollow body (glutes squeezed, abs braced, lower back flat) → push floor away → fingertip micro-adjustments.\n\n**Film yourself.** Your form feels better than it looks. Side angle, 10 reps. You will find the issue immediately.`,
+  plateau:`**Plateau Protocol:**\n\n**2+ week stall? Run this diagnostic:**\n\n1. **Sleep check:** Sub-7h stops adaptation. Non-negotiable.\n2. **Deload:** One week at 50% volume. Counter-intuitive, physiologically necessary.\n3. **Stimulus switch:** High reps → heavy weighted. Volume → intensity.\n4. **Caloric audit:** Strength gains in a deficit are very slow after beginner stage.\n5. **Frequency drop:** Try 2×/week instead of 4× for 2 weeks. Sometimes less is more.\n6. **Variation:** Chin-ups for 4 weeks instead of pull-ups. Neural freshness breaks plateaus.`,
+  nutrition:`**Calisthenics Nutrition Protocol:**\n\n**Protein:** 1.6–2.2g per kg bodyweight. This is the most evidence-supported recommendation for strength training. No supplement beats adequate protein.\n\n**Calories:** Simultaneous muscle gain + fat loss is possible for beginners for ~6 months then stalls. After that: surplus for strength gains, deficit for body composition.\n\n**For skill work specifically:** Body fat matters. Front lever, planche, human flag are ~20% easier at 12% BF vs 20% BF. Every kg of unnecessary fat is extra weight your lats must lift.\n\n**Pre-workout:** Carbs 60–90 min before. Don't train fasted for skill work — glycolytic system needs fuel.\n\n**Creatine:** 3–5g daily. Most studied supplement in sports science. Improves explosive performance and recovery.`,
+  recovery:`**Recovery Science:**\n\n**Sleep:** Growth hormone releases in deep sleep cycles. Cutting sleep is cutting adaptation. 8h minimum for athletes training 4+ days/week.\n\n**Tendon adaptation takes 3× longer than muscle.** This is why planche takes years. Tendons have poor blood supply. Eccentrics (slow lowering) are the most evidence-based tendon conditioning method.\n\n**Active recovery works:** Light movement increases blood flow without adding stress. 20min walk beats sitting completely still for recovery.\n\n**DOMS vs injury:** Delayed onset soreness (24–48h after training) = normal. Sharp pain during movement, joint pain, or pain that persists >5 days = stop and assess.\n\n**Deload frequency:** Every 4–6 weeks, take 1 week at 50% volume. This allows supercompensation.`,
+};
+function fbAI(msg){
+  const m=msg.toLowerCase();
+  if(m.includes('pull'))return AIFB.pullup;
+  if(m.includes('form')||m.includes('technique')||m.includes('check'))return AIFB.form;
+  if(m.includes('plateau')||m.includes('stuck')||m.includes('stop'))return AIFB.plateau;
+  if(m.includes('eat')||m.includes('nutri')||m.includes('protein')||m.includes('diet')||m.includes('food'))return AIFB.nutrition;
+  if(m.includes('recover')||m.includes('rest')||m.includes('sore')||m.includes('injury')||m.includes('pain')||m.includes('tendon'))return AIFB.recovery;
+  return `**On "${msg.slice(0,50)}":**\n\nKey principles that apply to this:\n\n• **Specificity:** Train the exact skill or closest progression daily\n• **Overload:** Each week must be slightly harder than last (more reps, more weight, harder variation)\n• **Consistency:** 4×/week for 40 weeks beats 7×/week for 10 weeks every time\n• **Recovery:** You don't grow during training. You grow during rest.\n\nFor fully personalized live AI responses, add your Anthropic API key above. It will give you coaching specific to your exact body, goals, and current level.`;
+}
+
+// STATE
+let ST={
+  page:'pg-land',panel:'home',
+  user:{name:'',level:'beginner',skill:'pullup',days:4,height:175,weight:70,age:22,email:''},
+  xp:0,streak:0,donedays:[],completedEx:[],totalWorkouts:0,premium:false,
+  skillProg:{},curSkill:'archer_pu',picks:{},obStep:1,
+  msgs:[],apiKey:'',aiMsgCount:0,planMonth:'m',
+};
+// load persisted state
+try{const sv=localStorage.getItem('apx4');if(sv){const p=JSON.parse(sv);ST={...ST,...p,msgs:[],completedEx:[]}}}catch(e){}
+function saveS(){try{const t={...ST,msgs:[]};localStorage.setItem('apx4',JSON.stringify(t))}catch(e){}}
+
+// INIT LANDING
+(function initLand(){
+  const g=document.getElementById('land-skills');
+  const grouped={};
+  Object.entries(SK).forEach(([k,s])=>{if(!grouped[s.cat])grouped[s.cat]=[];grouped[s.cat].push([k,s])});
+  Object.entries(CATS).forEach(([cat,ci])=>{
+    const skills=grouped[cat]||[];
+    // category header
+    const hdr=document.createElement('div');
+    hdr.style.cssText=`background:var(--s2);padding:14px 18px;grid-column:1/-1;border-bottom:1px solid ${ci.col}22`;
+    hdr.innerHTML=`<div style="font-family:var(--fo);font-size:11px;font-weight:700;letter-spacing:0.12em;color:${ci.col}">${ci.ic} ${ci.label}</div>`;
+    g.appendChild(hdr);
+    skills.forEach(([k,s])=>{
+      const free=canAccess(k);
+      const el=document.createElement('div');
+      el.style.cssText='background:var(--s1);padding:18px;cursor:none;position:relative;overflow:hidden;transition:var(--tr)';
+      el.className='clickable';
+      el.onmouseover=function(){this.style.background='var(--s2)'};
+      el.onmouseout=function(){this.style.background='var(--s1)'};
+      el.onclick=()=>showPage('pgl');
+      el.innerHTML=`${!free?`<span style="position:absolute;top:8px;right:8px;font-family:var(--fm);font-size:6px;letter-spacing:0.3em;padding:2px 5px;background:var(--god);color:var(--go);border:1px solid rgba(244,208,63,0.25)">PRO</span>`:`<span class="free-badge">FREE</span>`}
+        <div style="font-size:22px;margin-bottom:10px">${s.ic}</div>
+        <div style="font-size:12px;font-weight:700;margin-bottom:3px;letter-spacing:-0.01em">${s.n}</div>
+        <div style="font-size:10px;color:var(--mu);line-height:1.5;margin-bottom:9px">${s.desc.slice(0,70)}${s.desc.length>70?'...':''}</div>
+        <span style="font-family:var(--fm);font-size:7px;letter-spacing:0.22em;padding:1px 6px;border:1px solid;${s.diff==='b'?'color:var(--g);border-color:rgba(0,255,135,0.18);background:var(--gd)':s.diff==='i'?'color:var(--c);border-color:rgba(0,212,255,0.18);background:var(--cd)':'color:var(--go);border-color:rgba(244,208,63,0.18);background:var(--god)'}">${s.diff==='b'?'BEGINNER':s.diff==='i'?'INTERMEDIATE':'ADVANCED'}</span>`;
+      g.appendChild(el);
+    });
+  });
+
+  // build skill picker for onboarding
+  buildSkPicker();
+})();
+
+function buildSkPicker(){
+  const g=document.getElementById('sk-pick-grid');if(!g)return;
+  g.innerHTML='';
+  Object.entries(SK).forEach(([k,s])=>{
+    const acc=canAccess(k);
+    const el=document.createElement('div');
+    el.className='oo clickable';
+    if(!acc)el.style.opacity='0.45';
+    el.onclick=()=>{if(!acc){openModal();return}pick('skill',k,el)};
+    el.innerHTML=`<span class="oi">${s.ic}</span><div class="on2">${s.n}</div><div class="od">${s.diff==='b'?'Beginner':s.diff==='i'?'Intermediate':'Advanced'}${!acc?' · PRO':''}</div>`;
+    g.appendChild(el);
+  });
+}
+
+function ss(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'})}
+
+// PAGE ROUTING
+function showPage(id){
+  document.querySelectorAll('.pg,#pgl,#pgo,#pgd').forEach(e=>{e.classList.remove('on')});
+  const el=document.getElementById(id);if(el)el.classList.add('on');
+  ST.page=id;window.scrollTo(0,0);
+  if(id==='pgd')initDash();
+}
+function showLand(){showPage('pg-land')}
+
+// LOGIN
+function gLogin(){
+  const name=prompt('Enter your name (simulating Google OAuth):','Athlete');
+  if(!name)return;
+  ST.user.name=name;ST.user.email=name.toLowerCase().replace(/\s/g,'')+'@gmail.com';
+  toast('Signed in with Google! Welcome, '+name,'s');
+  setTimeout(()=>showPage('pgo'),350);
+}
+function guestL(){ST.user.name='Athlete';ST.user.email='guest@apex.app';toast('Continuing as guest','i');setTimeout(()=>showPage('pgo'),350)}
+function emailL(){
+  const e=document.getElementById('lem').value;
+  if(!e){toast('Enter your email','w');return}
+  ST.user.email=e;ST.user.name=e.split('@')[0];
+  toast('Welcome!','s');setTimeout(()=>showPage('pgo'),350);
+}
+
+// ONBOARDING
+function pick(key,val,el){
+  ST.picks[key]=val;
+  const par=el.closest('.og')||el.closest('#sk-pick-grid');
+  if(par)par.querySelectorAll('.oo').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+}
+function goOb(n){
+  if(n>ST.obStep){
+    if(ST.obStep===1&&!ST.picks.level){toast('Choose your level first','w');return}
+    if(ST.obStep===2&&!ST.picks.skill){toast('Pick a goal skill','w');return}
+  }
+  document.getElementById('obs'+ST.obStep).classList.remove('on');
+  ST.obStep=n;document.getElementById('obs'+n).classList.add('on');
+  document.querySelectorAll('.opd').forEach((d,i)=>d.classList.toggle('on',i<n));
+}
+function finishOb(){
+  const name=(document.getElementById('iname').value.trim()||ST.user.name||'Athlete');
+  ST.user={...ST.user,name,level:ST.picks.level||'beginner',skill:ST.picks.skill||'archer_pu',days:parseInt(document.getElementById('id').value),height:parseInt(document.getElementById('ih').value)||175,weight:parseInt(document.getElementById('iw').value)||70,age:parseInt(document.getElementById('ia').value)||22};
+  ST.curSkill=ST.user.skill;
+  const key=document.getElementById('iapikey').value.trim();
+  if(key){ST.apiKey=key;toast('AI key saved — live Claude coaching active! 🤖','s')}
+  if(!ST.donedays.includes(new Date().toDateString())){ST.donedays.push(new Date().toDateString());ST.streak=1;ST.xp=100}
+  saveS();toast('Plan generated! Welcome, '+name+' ⚡','s');
+  setTimeout(()=>showPage('pgd'),450);
+}
+
+// DASHBOARD
+function initDash(){
+  document.getElementById('dname').textContent=ST.user.name.toUpperCase();
+  document.getElementById('sav').textContent=ST.user.name.charAt(0).toUpperCase();
+  document.getElementById('sbun').textContent=ST.user.name;
+  ['nbs','nbx'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='flex'});
+  buildSKTabs();buildTree(ST.curSkill);buildHome();buildPlan();buildProgress();buildStreak();buildBadges();buildTips(ST.curSkill);buildVideos();buildAI();buildTipsTabs();
+  updateStats();
+}
+
+const LVLS=[{n:'ROOKIE',min:0,max:500,nx:'WARRIOR'},{n:'WARRIOR',min:500,max:1200,nx:'CHAMPION'},{n:'CHAMPION',min:1200,max:2500,nx:'ELITE'},{n:'ELITE',min:2500,max:5000,nx:'APEX'},{n:'APEX LEGEND',min:5000,max:999999,nx:'MAX'}];
+function getLv(){return LVLS.find(l=>ST.xp>=l.min&&ST.xp<l.max)||LVLS[LVLS.length-1]}
+function addXP(n){ST.xp+=n;updateStats()}
+
+function updateStats(){
+  const lv=getLv();const pct=((ST.xp-lv.min)/(lv.max-lv.min))*100;
+  ['hxp','sbxp'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=ST.xp});
+  ['hstr'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=ST.streak});
+  const hp=document.getElementById('hpr');if(hp)hp.textContent=(ST.skillProg[ST.curSkill]||0)+'%';
+  const hw=document.getElementById('hwk');if(hw)hw.textContent=ST.totalWorkouts;
+  ['ns'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=ST.streak});
+  ['nx'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=ST.xp});
+  const sbf=document.getElementById('sbf');if(sbf)sbf.style.width=Math.min(pct,100)+'%';
+  const lvf=document.getElementById('lvf');if(lvf)lvf.style.width=Math.min(pct,100)+'%';
+  const lvn=document.getElementById('lvn');if(lvn)lvn.textContent=lv.n;
+  const lvnx=document.getElementById('lvnx');if(lvnx)lvnx.textContent=lv.nx;
+  const lvxp=document.getElementById('lvxp');if(lvxp)lvxp.textContent=ST.xp+'/'+lv.max+' XP';
+  const sblv=document.getElementById('sblv');if(sblv)sblv.textContent=lv.n;
+  buildSideChar();saveS();
+}
+function buildSideChar(){
+  const el=document.getElementById('schar');if(!el)return;
+  const pr=ST.skillProg[ST.curSkill]||0;const lv=pr>=75?3:pr>=50?2:pr>=20?1:0;
+  const clr=['rgba(255,255,255,0.5)','rgba(0,212,255,0.8)','rgba(157,78,221,0.9)','#f4d03f'][lv];
+  const lbs=['ROOKIE','TRAINING','ADVANCED','MASTERED'];
+  el.innerHTML=`<svg width="54" height="80" viewBox="0 0 60 90" style="filter:drop-shadow(0 0 ${lv*5+3}px ${clr});${lv===3?'animation:mglo 3s infinite':''}">
+    <circle cx="30" cy="10" r="${8+lv*2}" fill="none" stroke="${clr}" stroke-width="${1+lv*0.5}"/>
+    ${lv>=2?`<circle cx="30" cy="10" r="${14+lv*2}" fill="none" stroke="${clr}" stroke-width="0.5" opacity="0.35"/>`:''} 
+    <path d="M30 ${18+lv} L30 ${50+lv}" stroke="${clr}" stroke-width="${2+lv*0.4}"/>
+    <path d="M30 ${27} L${18-lv*2} ${40+lv}" stroke="${clr}" stroke-width="${1.5}" fill="none" stroke-linecap="round"/>
+    <path d="M30 ${27} L${42+lv*2} ${40+lv}" stroke="${clr}" stroke-width="${1.5}" fill="none" stroke-linecap="round"/>
+    <line x1="30" y1="${50+lv}" x2="${22-lv}" y2="${76}" stroke="${clr}" stroke-width="${2}" stroke-linecap="round"/>
+    <line x1="30" y1="${50+lv}" x2="${38+lv}" y2="${76}" stroke="${clr}" stroke-width="${2}" stroke-linecap="round"/>
+    ${lv===3?'<line x1="30" y1="1" x2="30" y2="7" stroke="#f4d03f" stroke-width="2"/><line x1="8" y1="3" x2="13" y2="7" stroke="#f4d03f" stroke-width="1.5"/><line x1="52" y1="3" x2="47" y2="7" stroke="#f4d03f" stroke-width="1.5"/>':''}
+  </svg>
+  <div style="font-family:var(--fm);font-size:7px;letter-spacing:0.28em;color:${lv===3?'var(--go)':'var(--mu)'};margin-top:7px;text-align:center">${lbs[lv]}</div>`;
+}
+
+// HOME
+function buildHome(){
+  const sk=SK[ST.curSkill]||SK.archer_pu;
+  const plan=genPlan(ST.curSkill,ST.user.level);
+  const dm=[6,0,1,2,3,4,5];const di=dm[new Date().getDay()];
+  const dkeys=Object.keys(plan);const todayKey=dkeys[di]||dkeys[0];
+  const today=plan[todayKey];
+  document.getElementById('tct').textContent=today.t;
+  document.getElementById('tcfoc').textContent='Focus: '+today.f+' · '+sk.n;
+  document.getElementById('tcdayb').textContent=todayKey;
+  const list=document.getElementById('exlist');list.innerHTML='';
+  if(!today.ex.length||today.f==='REST'){list.innerHTML=`<div class="rday">🌿 Recovery Day — Mobility, sleep, and nutrition. You grow during rest, not training.</div>`;return}
+  today.ex.forEach((ex,i)=>{
+    const done=ST.completedEx.includes(i);
+    list.innerHTML+=`<div class="exr${done?' dn':''} clickable" onclick="toggleEx(${i})">
+      <div><div class="exn">${ex.n}</div><div class="exi">${ex.s}×${ex.r} · Rest:${ex.rest} · ${ex.note}</div></div>
+      <div class="exs">${ex.s}×${ex.r}</div>
+      <span class="exbg ${ex.cat==='pl'?'pl':ex.cat==='ps'?'ps':ex.cat==='co'?'co':'mb'}">${ex.cat.toUpperCase()}</span>
+      <div class="exck">${done?'✓':''}</div>
+    </div>`;
+  });
+  const allNodes=sk.lvls.flatMap(l=>l.nodes);
+  const next=allNodes.find(n=>n.p<100);
+  document.getElementById('msn').textContent=next?next.n:'SKILL COMPLETE!';
+  document.getElementById('msd').textContent=next?`${next.s} — ${next.w}`:'All nodes mastered!';
+  const pr=ST.skillProg[ST.curSkill]||0;
+  document.getElementById('msbar').style.width=pr+'%';
+  document.getElementById('mspct').textContent=pr+'% toward '+sk.n;
+}
+function toggleEx(i){
+  const idx=ST.completedEx.indexOf(i);
+  if(idx===-1){ST.completedEx.push(i);addXP(25);toast('+25 XP 💪','s')}
+  else ST.completedEx.splice(idx,1);
+  buildHome();
+}
+function completeWorkout(){
+  const td=new Date().toDateString();
+  if(!ST.donedays.includes(td)){
+    ST.donedays.push(td);ST.streak++;ST.totalWorkouts++;addXP(120);
+    ST.skillProg[ST.curSkill]=Math.min(100,(ST.skillProg[ST.curSkill]||0)+8);
+    toast('Session done! +120 XP 🔥 Streak: '+ST.streak,'s');
+    buildHome();buildProgress();buildStreak();
+  } else toast("Today's session logged. Rest and recover 🌿",'i');
+}
+
+// SKILL TREE
+function buildSKTabs(){
+  const cont=document.getElementById('sktabs');if(!cont)return;cont.innerHTML='';
+  const grouped={};
+  Object.entries(SK).forEach(([k,s])=>{if(!grouped[s.cat])grouped[s.cat]=[];grouped[s.cat].push([k,s])});
+  Object.entries(CATS).forEach(([cat,ci])=>{
+    const skills=grouped[cat]||[];
+    if(!skills.length)return;
+    const hdr=document.createElement('div');
+    hdr.style.cssText=`font-family:var(--fm);font-size:7px;letter-spacing:0.35em;color:${ci.col};padding:4px 2px;margin-top:8px;margin-right:6px;text-transform:uppercase;flex-basis:100%`;
+    hdr.textContent='// '+cat;
+    cont.appendChild(hdr);
+    skills.forEach(([k,s])=>{
+      const acc=canAccess(k);
+      const btn=document.createElement('button');
+      btn.className='skb clickable'+(k===ST.curSkill?' on':'');
+      btn.textContent=s.ic+' '+s.n+(acc?'':' 🔒');
+      btn.onclick=()=>switchSK(k);
+      cont.appendChild(btn);
+    });
+  });
+}
+function switchSK(k){
+  if(!canAccess(k)){openModal();return}
+  ST.curSkill=k;
+  document.querySelectorAll('#sktabs .skb').forEach(b=>b.classList.remove('on'));
+  const allBtns=[...document.querySelectorAll('#sktabs .skb')];
+  const kIdx=Object.keys(SK).indexOf(k);if(allBtns[kIdx])allBtns[kIdx].classList.add('on');
+  buildTree(k);buildHome();buildProgress();buildTips(k);
+}
+function buildTree(sk){
+  const skill=SK[sk];const cont=document.getElementById('treecontent');if(!cont)return;
+  const ci=CATS[skill.cat]||{col:'var(--c)',ic:'💪'};
+  let html=`<div style="padding:14px;border:1px solid ${ci.col}22;background:rgba(255,255,255,0.01);border-radius:3px;margin-bottom:18px">
+    <div style="font-family:var(--fm);font-size:7px;letter-spacing:0.4em;color:${ci.col};margin-bottom:3px">// ${skill.cat} · ${skill.diff==='b'?'BEGINNER':skill.diff==='i'?'INTERMEDIATE':'ADVANCED'}</div>
+    <div style="font-size:14px;font-weight:700;margin-bottom:3px">${skill.ic} ${skill.n}</div>
+    <div style="font-size:11px;color:var(--mu)">${skill.desc}</div>
+  </div>`;
+  skill.lvls.forEach((lvl,li)=>{
+    html+=`<div class="trlv"><div class="tll">// ${lvl.lbl}</div><div class="tnds">`;
+    lvl.nodes.forEach((node,ni)=>{
+      const prevDone=li===0||skill.lvls[li-1].nodes.every(n=>n.p>=100);
+      const locked=!prevDone;const done=node.p>=100;
+      html+=`<div class="tnd${locked?' lk':done?' dn':' ac'} clickable" onclick="${locked?`toast('Complete previous level first!','w')`:`markNode(${li},${ni},'${sk}')`}">
+        <div class="tns">${done?'✓ COMPLETE':locked?'LOCKED':'● IN PROGRESS'}</div>
+        <div class="tnn">${node.n}</div>
+        <div class="tnset">${node.s}</div>
+        <div class="tnw">${node.w}</div>
+        <div class="tnb"><div class="tnf" style="width:${node.p}%"></div></div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+    if(li<skill.lvls.length-1)html+=`<div class="tcon"></div>`;
+  });
+  cont.innerHTML=html;
+}
+function markNode(li,ni,sk){
+  const node=SK[sk].lvls[li].nodes[ni];
+  if(node.p>=100){toast('Already mastered! 🏅','i');return}
+  node.p=100;addXP(90);ST.skillProg[sk]=Math.min(100,(ST.skillProg[sk]||0)+14);
+  toast(node.n+' unlocked! +90 XP ✓','s');
+  buildTree(sk);buildHome();buildProgress();
+}
+
+// PLAN
+function buildPlan(){
+  const plan=genPlan(ST.curSkill,ST.user.level);
+  const sk=SK[ST.curSkill]||SK.archer_pu;
+  const do7=['MON','TUE','WED','THU','FRI','SAT','SUN'];
+  const dm=[6,0,1,2,3,4,5];const tidx=dm[new Date().getDay()];
+  let html=`<div style="margin-bottom:14px;padding:12px;border:1px solid rgba(0,212,255,0.12);background:rgba(0,212,255,0.02);border-radius:3px">
+    <div class="tag" style="color:var(--c);margin-bottom:3px">// CURRENT FOCUS · ${sk.n.toUpperCase()}</div>
+    <div style="font-size:14px;font-weight:700">${ST.user.level.toUpperCase()} PROTOCOL</div>
+    <div style="font-size:10px;color:var(--mu);margin-top:2px">${ST.user.height}cm · ${ST.user.weight}kg · ${ST.user.days} days/week · BMI: ${(ST.user.weight/((ST.user.height/100)**2)).toFixed(1)}</div>
+  </div>`;
+  html+=`<div class="wkg">`;
+  do7.forEach((d,i)=>{const p=plan[d]||{f:'REST'};const isR=p.f==='REST';const isT=i===tidx;html+=`<div class="wkd${isR?' rs':''}${isT?' tw':''}"><div class="wdn">${d}</div><div class="wdf" style="${isT?'color:var(--c)':''}">${p.f}</div></div>`});
+  html+=`</div>`;
+  const todayKey=do7[tidx];const today=plan[todayKey]||plan['MON'];
+  html+=`<div style="margin-bottom:10px;padding:10px;border:1px solid var(--bd);border-radius:3px;background:rgba(0,212,255,0.02)"><div class="tag" style="color:var(--c);margin-bottom:3px">// ${do7[tidx]} — ${today.f}</div><div style="font-size:14px;font-weight:700">${today.t}</div></div>`;
+  if(today.ex&&today.ex.length&&today.f!=='REST'){
+    html+=`<div style="overflow-x:auto;border-radius:3px;border:1px solid var(--bd)"><table class="ptbl"><thead><tr><th>#</th><th>EXERCISE</th><th>TYPE</th><th>SETS</th><th>REPS/TIME</th><th>REST</th><th>COACHING CUE</th></tr></thead><tbody>`;
+    today.ex.forEach((ex,i)=>{html+=`<tr><td style="font-family:var(--fm);font-size:8px;color:var(--mu2)">${String(i+1).padStart(2,'0')}</td><td><strong>${ex.n}</strong></td><td><span class="exbg ${ex.cat==='pl'?'pl':ex.cat==='ps'?'ps':ex.cat==='co'?'co':'mb'}">${ex.cat.toUpperCase()}</span></td><td style="font-family:var(--fm);color:var(--c)">${ex.s}</td><td style="font-family:var(--fm)">${ex.r}</td><td style="font-family:var(--fm);color:var(--mu)">${ex.rest}</td><td style="font-size:10px;color:var(--mu)">${ex.note}</td></tr>`});
+    html+=`</tbody></table></div>`;
+  } else html+=`<div class="rday">🌿 Recovery. Mobility, nutrition, 8h sleep. This is when progress is made.</div>`;
+  html+=`<div class="pno"><span style="color:var(--go)">⚡ AI NOTE:</span> Plan for <strong style="color:var(--tx)">${ST.user.level}</strong> focusing on <strong style="color:var(--tx)">${sk.n}</strong>. Protein target: ${Math.round(ST.user.weight*2)}g/day. Add 2.5kg to weighted exercises every time you complete all sets with clean form. RPE target 7–8/10 per working set. Track RPE weekly.</div>`;
+  const c=document.getElementById('plancontent');if(c)c.innerHTML=html;
+}
+
+// AI COACH — WORKING CLAUDE API
+function buildAI(){
+  const kd=document.getElementById('keydisp');if(kd&&ST.apiKey)kd.value=ST.apiKey;
+  const msgs=document.getElementById('aimsg');if(!msgs)return;msgs.innerHTML='';
+  const sk=SK[ST.curSkill]||SK.archer_pu;
+  const greeting=`👋 I'm your **APEX AI Coach**${ST.apiKey?' — connected to live Claude AI':' — expert mode'}.\n\nKnow your profile: **${ST.user.name}**, ${ST.user.level} level, training **${sk.n}**, ${ST.user.height}cm / ${ST.user.weight}kg.\n\n${ST.apiKey?'Ask me anything for fully personalized live coaching.':'Ask anything. I\'ll give expert coaching. Add your Anthropic API key above for live AI responses.'}`;
+  appendMsg(greeting,'b');
+  const sugs=document.getElementById('aisugg');if(sugs){
+    const q=['How do I progress faster on '+sk.n+'?','Fix my form — '+sk.n,'Why am I plateauing?','Nutrition for my goals','When should I progress to next node?'];
+    sugs.innerHTML=q.map(s=>`<button class="aisp clickable" onclick="qask('${s.replace(/'/g,"\\'")}')">${s}</button>`).join('');
+  }
+  ST.aiMsgCount=0;
+}
+function saveKey(v){ST.apiKey=v.trim();saveS();if(v)toast('API key saved — live AI active 🤖','s')}
+function qask(q){const i=document.getElementById('aiin');if(i)i.value=q;sendMsg()}
+
+function appendMsg(text,role){
+  const m=document.getElementById('aimsg');if(!m)return;
+  const d=document.createElement('div');d.className='amsg '+role;
+  d.innerHTML=text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+  m.appendChild(d);m.scrollTop=m.scrollHeight;
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('aiin');const msg=inp.value.trim();if(!msg)return;
+  // Free tier limit
+  if(!ST.premium&&!ST.apiKey&&ST.aiMsgCount>=5){
+    toast('Free tier: 5 AI messages/day. Add API key or upgrade Premium for unlimited.','w');
+    openModal();return;
+  }
+  inp.value='';appendMsg(msg,'u');
+  ST.aiMsgCount++;addXP(5);
+  const m=document.getElementById('aimsg');
+  const th=document.createElement('div');th.className='amsg b ath';th.textContent='Thinking';m.appendChild(th);m.scrollTop=m.scrollHeight;
+
+  if(ST.apiKey){
+    const sk=SK[ST.curSkill]||SK.archer_pu;
+    const sysPrompt=`You are APEX AI Coach — an elite calisthenics coach embedded in a premium training platform. You are direct, specific, and give science-backed advice. Never be generic or vague.
+
+User profile: Name: ${ST.user.name}, Level: ${ST.user.level}, Current goal skill: ${sk.n} (${sk.desc}), Height: ${ST.user.height}cm, Weight: ${ST.user.weight}kg, Age: ${ST.user.age}, Training ${ST.user.days} days/week, Current XP: ${ST.xp}, Streak: ${ST.streak} days, Skill progress: ${ST.skillProg[ST.curSkill]||0}%.
+
+Rules: Answer in under 200 words. Use **bold** for key points. Be specific to their exact level and goal. Give actionable advice they can implement today. If they ask about a skill, give the most common mistake people at their level make and how to fix it.`;
+    try{
+      const msgs=ST.msgs.slice(-5);msgs.push({role:'user',content:msg});
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':ST.apiKey,'anthropic-version':'2023-06-01'},
+        body:JSON.stringify({model:'claude-opus-4-5',max_tokens:600,system:sysPrompt,messages:msgs})
+      });
+      const data=await res.json();
+      th.remove();
+      if(data.error){appendMsg(`⚠ API Error: ${data.error.message}\n\nFalling back to expert mode...`,'b');setTimeout(()=>appendMsg(fbAI(msg),'b'),300);return}
+      const reply=data.content?.[0]?.text||'No response.';
+      ST.msgs.push({role:'user',content:msg},{role:'assistant',content:reply});
+      if(ST.msgs.length>12)ST.msgs=ST.msgs.slice(-10);
+      appendMsg(reply,'b');
+    }catch(e){
+      th.remove();
+      appendMsg(`⚠ Connection error: ${e.message}\n\nUsing expert mode...`,'b');
+      setTimeout(()=>appendMsg(fbAI(msg),'b'),300);
+    }
+  } else {
+    await new Promise(r=>setTimeout(r,800+Math.random()*600));
+    th.remove();
+    appendMsg(fbAI(msg),'b');
+  }
+}
+
+// PROGRESS
+function buildProgress(){
+  const sk=ST.curSkill;const pr=ST.skillProg[sk]||0;
+  const circ=2*Math.PI*50;const ring=document.getElementById('pring');
+  if(ring){ring.style.strokeDashoffset=circ-(pr/100)*circ;ring.style.stroke=pr>=75?'var(--g)':pr>=40?'var(--c)':'var(--p)'}
+  const rn=document.getElementById('prn');if(rn)rn.textContent=pr+'%';
+  const skill=SK[sk];
+  const psn=document.getElementById('prskn');if(psn)psn.textContent=skill.n;
+  const prl=document.getElementById('prlvl');if(prl)prl.textContent=ST.user.level.toUpperCase()+' · '+skill.cat;
+  const prd=document.getElementById('prdesc');if(prd)prd.textContent=skill.desc;
+  const grid=document.getElementById('prgrid');if(!grid)return;
+  const pcols={PULL:'var(--c)',PUSH:'var(--p)',CORE:'var(--g)',PLANCHE:'var(--go)',DYNAMIC:'var(--r)'};
+  grid.innerHTML='';
+  Object.entries(SK).forEach(([k,s])=>{
+    const p=ST.skillProg[k]||0;const locked=!canAccess(k);
+    grid.innerHTML+=`<div class="prc" style="${locked?'opacity:0.25':''}" onclick="${locked?'openModal()':''}">
+      <div class="pcn">${s.ic} ${s.n}</div>
+      <div class="pcl">${s.cat} · ${p}%</div>
+      <div class="pb"><div class="pbf" style="width:${p}%;background:${pcols[s.cat]||'var(--c)'}"></div></div>
+      <div class="ppt">${p}% complete</div>
+    </div>`;
+  });
+  const tp=document.getElementById('tpct');if(tp)tp.textContent=pr+'%';
+  const ts=document.getElementById('tskill');if(ts)ts.textContent=skill.n;
+  const days=pr>0?Math.max(14,Math.round((100-pr)/Math.max(1,ST.streak*0.35))):90;
+  const td=document.getElementById('tdays');if(td)td.textContent=days+'–'+(days+30)+' days';
+}
+
+// STREAK
+function buildStreak(){
+  const sn=document.getElementById('stnum');if(sn)sn.textContent=ST.streak;
+  const msgs=['Begin your journey!','Keep it up!','Building habits!','One full week — momentum is real.','Two weeks strong!','A MONTH! You\'re transformed.','LEGENDARY consistency!'];
+  const sm=document.getElementById('stmsg');if(sm)sm.textContent=msgs[Math.min(Math.floor(ST.streak/5),msgs.length-1)];
+  const cal=document.getElementById('stcal');if(!cal)return;cal.innerHTML='';
+  const now=new Date();
+  for(let i=20;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const ds=d.toDateString();const done=ST.donedays.includes(ds);const isT=i===0;cal.innerHTML+=`<div class="scd${done?' dd':''}${isT?' td':''}">${d.getDate()}</div>`}
+  const ms=[{n:3,ic:'⚡',l:'3 Days'},{n:7,ic:'🔥',l:'1 Week'},{n:14,ic:'💎',l:'2 Weeks'},{n:30,ic:'👑',l:'1 Month'},{n:100,ic:'🌌',l:'100 Days'}];
+  const sc=document.getElementById('stmiles');if(!sc)return;
+  sc.innerHTML=ms.map(m=>`<div style="font-family:var(--fm);font-size:8px;padding:4px 10px;border:1px solid ${ST.streak>=m.n?'rgba(0,255,135,0.26)':'var(--bd)'};color:${ST.streak>=m.n?'var(--g)':'var(--mu)'};border-radius:2px">${m.ic} ${m.l}</div>`).join('');
+}
+
+// BADGES
+const BGS=[
+  {id:'f1',ic:'🌟',n:'First Rep',d:'Complete first workout',xp:50},
+  {id:'s3',ic:'🔥',n:'On Fire',d:'3-day streak',xp:75},
+  {id:'s7',ic:'⚡',n:'Unstoppable',d:'7-day streak',xp:150},
+  {id:'s30',ic:'👑',n:'Legendary',d:'30-day streak',xp:500},
+  {id:'nd1',ic:'🏅',n:'First Node',d:'Unlock first skill node',xp:80},
+  {id:'10w',ic:'💪',n:'10 Sessions',d:'Complete 10 workouts',xp:200},
+  {id:'50w',ic:'🏆',n:'50 Sessions',d:'50 workouts logged',xp:500},
+  {id:'pl',ic:'🛸',n:'Planche Path',d:'Reach 30% planche tree',xp:400},
+  {id:'oap',ic:'☝️',n:'OAP Journey',d:'Reach 50% OAP path',xp:600},
+  {id:'apex',ic:'🌌',n:'APEX LEGEND',d:'Reach 1000+ XP',xp:0},
+];
+function getEarned(){
+  const e=[];
+  if(ST.totalWorkouts>=1)e.push('f1');
+  if(ST.streak>=3)e.push('s3');if(ST.streak>=7)e.push('s7');if(ST.streak>=30)e.push('s30');
+  if(Object.values(SK).some(s=>s.lvls.some(l=>l.nodes.some(n=>n.p>=100))))e.push('nd1');
+  if(ST.totalWorkouts>=10)e.push('10w');if(ST.totalWorkouts>=50)e.push('50w');
+  if((ST.skillProg['tuck_planche']||0)>=30||(ST.skillProg['planche_lean']||0)>=50)e.push('pl');
+  if((ST.skillProg['oap']||0)>=50)e.push('oap');
+  if(ST.xp>=1000)e.push('apex');
+  return e;
+}
+function buildBadges(){
+  const earned=getEarned();
+  const grid=document.getElementById('bgg');if(!grid)return;grid.innerHTML='';
+  BGS.forEach(b=>{const have=earned.includes(b.id);grid.innerHTML+=`<div class="bgc${have?'':' lk'}"><div class="bgi">${b.ic}</div><div class="bgnm">${b.n}</div><div class="bgd">${b.d}</div><div style="font-family:var(--fm);font-size:8px;margin-top:5px;color:${have?'var(--go)':'var(--mu2)'}">${have?'+'+b.xp+' XP':'locked'}</div></div>`});
+}
+
+// TIPS
+function buildTipsTabs(){
+  const cont=document.getElementById('tipstabs');if(!cont)return;cont.innerHTML='';
+  const grouped={};
+  Object.entries(SK).forEach(([k,s])=>{if(!grouped[s.cat])grouped[s.cat]=[];grouped[s.cat].push([k,s])});
+  Object.entries(CATS).forEach(([cat,ci])=>{
+    const skills=grouped[cat]||[];if(!skills.length)return;
+    const hdr=document.createElement('div');
+    hdr.style.cssText=`font-family:var(--fm);font-size:7px;letter-spacing:0.35em;color:${ci.col};padding:4px 2px;margin-top:7px;flex-basis:100%;text-transform:uppercase`;
+    hdr.textContent='// '+cat;cont.appendChild(hdr);
+    skills.forEach(([k,s])=>{
+      const btn=document.createElement('button');
+      btn.className='skb clickable'+(k===ST.curSkill?' on':'');
+      btn.textContent=s.ic+' '+s.n;
+      btn.onclick=()=>{document.querySelectorAll('#tipstabs .skb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');buildTips(k)};
+      cont.appendChild(btn);
+    });
+  });
+}
+function buildTips(sk){
+  const skill=SK[sk];const cont=document.getElementById('tipscontent');if(!cont)return;
+  if(!skill.tips||!skill.tips.length){cont.innerHTML=`<div style="grid-column:1/-1;color:var(--mu);font-size:12px;padding:20px">Technique guides for ${skill.n} coming soon.</div>`;return}
+  cont.innerHTML=`<div style="grid-column:1/-1;margin-bottom:3px"><div style="font-size:16px;font-weight:700">${skill.ic} ${skill.n} — Technique</div></div>`;
+  skill.tips.forEach(tip=>{
+    cont.innerHTML+=`<div class="tpc"><div class="tpt ${tip.t==='mistake'?'ttm':tip.t==='fix'?'ttf':'ttp'}">${tip.t==='mistake'?'✕ MISTAKE':tip.t==='fix'?'✓ CORRECTION':'💡 PRO TIP'}</div><div class="tph">${tip.h}</div><div class="tpb">${tip.b}</div></div>`;
+  });
+}
+
+// VIDEOS
+const VIDS=[
+  {sk:'mixed_grip',t:'Mixed Grip Pull-up Guide',type:'Free Tutorial',ic:'🤲',free:true},
+  {sk:'hang_lr',t:'Hanging Leg Raise Master Class',type:'Free Tutorial',ic:'🦵',free:true},
+  {sk:'pike_push',t:'Pike Push-up to HSPU Path',type:'Free Tutorial',ic:'▲',free:true},
+  {sk:'archer_pu',t:'Archer Pull-up: OAP Path',type:'Premium',ic:'🏹',free:false},
+  {sk:'muscle_up',t:'Muscle-Up Zero to Hero',type:'Premium',ic:'🦅',free:false},
+  {sk:'hs_hold',t:'Handstand in 90 Days',type:'Premium',ic:'🤸',free:false},
+  {sk:'front_lever',t:'Front Lever All Progressions',type:'Premium',ic:'⚓',free:false},
+  {sk:'planche_lean',t:'Planche: Lean to Full',type:'Premium',ic:'🛸',free:false},
+  {sk:'oap',t:'One Arm Pull-up Protocol',type:'Premium',ic:'☝️',free:false},
+  {sk:'dragon_flag',t:'Dragon Flag Breakdown',type:'Premium',ic:'🐉',free:false},
+  {sk:'human_flag',t:'Human Flag Physics + Training',type:'Premium',ic:'🚩',free:false},
+  {sk:'muscle_up',t:'360 Muscle-Up Mastery',type:'Premium',ic:'🔄',free:false},
+];
+function buildVideos(){
+  const grid=document.getElementById('vidgrid');if(!grid)return;grid.innerHTML='';
+  VIDS.forEach(v=>{
+    const locked=!v.free&&!ST.premium;
+    const sk=SK[v.sk];
+    grid.innerHTML+=`<div class="vdc"><div class="vdp"><div class="vdgl">${v.ic}</div>${locked?`<div class="vdov"><div style="font-size:26px">🔒</div><span style="font-family:var(--fm);font-size:7px;letter-spacing:0.3em;padding:2px 8px;border:1px solid rgba(244,208,63,0.26);color:var(--go);background:var(--god)">PREMIUM</span></div>`:''}</div><div class="vdi"><div class="vdn">${v.t}</div><div class="vdt">${v.type} · ${sk?sk.n:v.sk}</div>${locked?`<button class="btn bgh bsm clickable" style="margin-top:7px;width:100%" onclick="openModal()">Unlock →</button>`:'<button class="btn bo bsm clickable" style="margin-top:7px;width:100%">▶ Watch</button>'}</div></div>`;
+  });
+  const cta=document.getElementById('vidcta');if(cta)cta.style.display=ST.premium?'none':'block';
+}
+
+// PANEL SWITCHING
+function showPanel(p){
+  document.querySelectorAll('.pnl').forEach(e=>e.classList.remove('on'));
+  const pnl=document.getElementById('pnl-'+p);if(pnl)pnl.classList.add('on');
+  document.querySelectorAll('.si').forEach(e=>e.classList.remove('on'));
+  const sn=document.getElementById('sn-'+p);if(sn)sn.classList.add('on');
+  document.querySelectorAll('.mb').forEach(e=>e.classList.remove('on'));
+  const mb=document.getElementById('mb-'+p);if(mb)mb.classList.add('on');
+  ST.panel=p;
+  if(p==='tree'){buildSKTabs();buildTree(ST.curSkill)}
+  if(p==='progress'){setTimeout(buildProgress,80)}
+  if(p==='streak')buildStreak();
+  if(p==='badges')buildBadges();
+  if(p==='tips'){buildTipsTabs();buildTips(ST.curSkill)}
+  if(p==='videos')buildVideos();
+  if(p==='plan')buildPlan();
+  if(p==='ai')buildAI();
+}
+
+// PAYMENT
+function openModal(){document.getElementById('pmo').classList.remove('h')}
+function closeModal(){document.getElementById('pmo').classList.add('h')}
+function setPlan(p){
+  document.getElementById('pmo-m').classList.toggle('on',p==='m');
+  document.getElementById('pmo-y').classList.toggle('on',p==='y');
+  document.getElementById('pamount').textContent=p==='m'?'₹99':'₹699';
+  document.getElementById('pperiod').textContent=p==='m'?'PER MONTH · CANCEL ANYTIME':'PER YEAR · SAVE ₹489';
+  ST.planMonth=p;
+}
+function selpm(el){document.querySelectorAll('.pmm').forEach(e=>e.classList.remove('on'));el.classList.add('on')}
+
+function doPayment(){
+  // Route to UPI payment
+  const amount=ST.planMonth==='m'?99:699;
+  const upiId='8750874221@ybl'; // PhonePe UPI - number is masked in displayed UPI ID format
+  const upiLink=`upi://pay?pa=${upiId}&pn=APEX+Premium&am=${amount}&cu=INR&tn=APEX+Premium+Subscription`;
+  
+  // Try to open UPI app
+  const link=document.createElement('a');
+  link.href=upiLink;link.click();
+  
+  // Show confirmation modal after brief delay
+  setTimeout(()=>{
+    const confirm=window.confirm(`Payment of ₹${amount} initiated via UPI.\n\nAfter completing payment, click OK to activate your Premium access.`);
+    if(confirm){activatePrem()}
+    else{toast('Complete the UPI payment to activate Premium','w')}
+  },1500);
+}
+
+function activatePrem(){
+  ST.premium=true;closeModal();addXP(500);saveS();
+  toast('⚡ APEX PREMIUM ACTIVATED! All 60+ skills unlocked!','s');
+  if(ST.page==='pgd'){buildSKTabs();buildVideos();buildProgress();buildTipsTabs();buildSkPicker()}
+}
+
+// TOAST
+function toast(msg,type='i'){
+  const box=document.getElementById('tbox');const icons={s:'✓',i:'ℹ',w:'⚠',e:'✕'};
+  const el=document.createElement('div');el.className=`tst ${type}`;
+  el.innerHTML=`<span>${icons[type]||'•'}</span><span>${msg}</span>`;
+  box.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(14px)';el.style.transition='all 0.28s';setTimeout(()=>el.remove(),280)},3400);
+}
+
+// SCROLL ANIMATIONS
+const io=new IntersectionObserver(ent=>{ent.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';e.target.style.transition='opacity 0.65s ease,transform 0.65s ease'}})},{threshold:0.05});
+setTimeout(()=>{document.querySelectorAll('#land-skills > div:not([style*="grid-column"])').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(22px)';io.observe(el)})},600);
+</script>
+</body>
+</html>
